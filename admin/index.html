@@ -1,0 +1,419 @@
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hệ Thống Quản Trị & CMS Kéo Thả</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+
+    <link rel="stylesheet" href="style/style.css">
+</head>
+<body>
+
+    <section id="login-section">
+        <div class="login-card">
+            <img src="https://media.leloipt.edu.vn/Media/30_TH1041/Images/footer-logo-leloi83f2a8da-5-e.png" class="logo-img">
+            <h2 class="mt-4 fw-bold" style="color: #112255;">Quản Trị Viên</h2>
+            <form id="loginForm" class="mt-4">
+                <div class="form-floating mb-3"><input type="text" class="form-control" id="admin_user" required><label>Tài khoản</label></div>
+                <div class="form-floating mb-3"><input type="password" class="form-control" id="admin_password" required><label>Mật khẩu</label></div>
+                <button type="submit" class="btn btn-primary w-100 py-3 rounded-pill fw-bold">ĐĂNG NHẬP</button>
+            </form>
+            <div class="loading-overlay" id="login-loading"><div class="spinner-border text-primary"></div></div>
+        </div>
+    </section>
+
+    <div class="offcanvas offcanvas-start shadow-lg border-0" data-bs-backdrop="false" data-bs-scroll="true" tabindex="-1" id="toolSidebar" style="width: 330px; z-index: 1060;">
+        <div class="offcanvas-header bg-white border-bottom">
+            <h5 class="offcanvas-title fw-bold" style="color: #112255;"><i class="bi bi-grid-1x2"></i> Công Cụ Web</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+        </div>
+        <div class="offcanvas-body bg-white">
+            <div class="alert alert-info border-0 py-2 small fw-bold">
+                <i class="bi bi-info-circle"></i> Có thể <b>Kéo Thả</b> khối sang bên phải HOẶC <b>Bấm Trực Tiếp</b> vào khối để thêm (dành cho Điện thoại).
+            </div>
+            
+            <div class="drag-item" draggable="true" ondragstart="dragBlock(event, 'box-text')" onclick="window.addBlockClick('box-text')" style="background-color: #112255; color: white;">
+                <i class="bi bi-card-text fs-4 d-block mb-1"></i> Hộp Văn Bản<br><small class="fw-normal">(Kéo thả hoặc Bấm)</small>
+            </div>
+            <div class="drag-item" draggable="true" ondragstart="dragBlock(event, 'tech-list')" onclick="window.addBlockClick('tech-list')" style="background-color: #eef2f5; border: 2px dashed #f15a3a; color: #f15a3a;">
+                <i class="bi bi-card-checklist fs-4 d-block mb-1"></i> Khối Thông Tin 1<br><small class="fw-normal">(Kéo thả hoặc Bấm)</small>
+            </div>
+            <div class="drag-item" draggable="true" ondragstart="dragBlock(event, 'english-list')" onclick="window.addBlockClick('english-list')" style="background-color: #eef2f5; border: 2px dashed #00d5ff; color: #008eb3;">
+                <i class="bi bi-book fs-4 d-block mb-1"></i> Khối Thông Tin 2<br><small class="fw-normal">(Kéo thả hoặc Bấm)</small>
+            </div>
+            <div class="drag-item" draggable="true" ondragstart="dragBlock(event, 'teacher-list')" onclick="window.addBlockClick('teacher-list')" style="background-color: #eef2f5; border: 2px dashed #00d5ff; color: #008eb3;">
+                <i class="bi bi-person-video3 fs-4 d-block mb-1"></i> Khối Giáo Viên (Slide)<br><small class="fw-normal">(Kéo thả hoặc Bấm)</small>
+            </div>
+            <div class="drag-item" draggable="true" ondragstart="dragBlock(event, 'news-list')" onclick="window.addBlockClick('news-list')" style="background-color: #fff8e1; border: 2px dashed #ff9800; color: #f57c00;">
+                <i class="bi bi-newspaper fs-4 d-block mb-1"></i> Khối LLC NEWS<br><small class="fw-normal">(Kéo thả hoặc Bấm)</small>
+            </div>
+        </div>
+    </div>
+
+    <button id="btn-hamburger" class="btn btn-primary position-fixed shadow-lg d-none" style="bottom: 30px; left: 30px; z-index: 1050; border-radius: 50px; padding: 12px 25px; font-weight: bold;" data-bs-toggle="offcanvas" data-bs-target="#toolSidebar">
+        <i class="bi bi-list fs-5 me-1"></i> THÊM KHỐI
+    </button>
+
+    <section id="admin-section">
+        <div class="admin-header">
+            <div class="container-fluid position-relative">
+                <h2 class="text-center fw-bold m-0 pb-3">HỆ THỐNG QUẢN LÝ</h2>
+                <button id="btnLogout" class="btn btn-outline-light btn-sm position-absolute" style="top: 0px; right: 20px;"><i class="bi bi-box-arrow-right"></i> Thoát</button>
+                
+                <ul class="nav nav-tabs align-items-center pb-2" id="myTab" role="tablist">
+                    <li class="nav-item"><button class="nav-link active" data-bs-toggle="tab" data-bs-target="#dataTab">Dữ Liệu Đăng Ký</button></li>
+                    <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#cmsTab">Page Builder (Sửa Web)</button></li>
+                    <li class="nav-item ms-2 pb-1">
+                        <button class="btn btn-sm text-white fw-bold d-flex align-items-center gap-2" style="background-color: #fa8f64; border-radius: 8px; padding: 10px 15px; font-size: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.15);" data-bs-toggle="modal" data-bs-target="#formConfigModal">
+                            <i class="bi bi-ui-checks-grid"></i> Sửa Form Đăng Ký
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="tab-content py-4 px-3" id="myTabContent">
+            
+            <div class="tab-pane fade show active" id="dataTab">
+                <div class="container-fluid">
+                    <div class="filter-card row align-items-end">
+                        <div class="col-md-3"><label class="small fw-bold">Lọc Khóa Học / Độ tuổi</label>
+                            <select id="filterAge" class="form-select"><option value="all">Tất cả</option></select>
+                        </div>
+                        <div class="col-md-3"><label class="small fw-bold">Lọc Ngày</label><input type="date" id="filterDate" class="form-control"></div>
+                        <div class="col-md-4">
+                            <button id="btnFilter" class="btn btn-primary me-1">Lọc</button>
+                            <button id="btnClearFilter" class="btn btn-secondary me-1">Bỏ lọc</button>
+                            <button class="btn btn-danger" onclick="window.bulkDelete()"><i class="bi bi-trash"></i> Xóa chọn</button>
+                        </div>
+                        <div class="col-md-2 text-end"><span class="badge bg-success p-2" id="totalCount">Tổng: 0</span></div>
+                    </div>
+                    <div class="card-table"><div class="table-responsive"><table class="table table-hover mb-0">
+                        <thead class="table-light"><tr>
+                            <th class="text-center" style="width: 40px;"><input type="checkbox" id="selectAllCheckbox" onchange="window.toggleSelectAll(this)"></th>
+                            <th>STT</th>
+                            <th>Khách Hàng</th>
+                            <th>Liên Hệ</th>
+                            <th>Khu Vực</th>
+                            <th>Thông Tin Đăng Ký</th>
+                            <th>Ghi Chú</th>
+                            <th>Thời Gian</th>
+                            <th class="text-center">Tác Vụ</th>
+                        </tr></thead>
+                        <tbody id="data-body"></tbody>
+                    </table></div></div>
+                </div>
+            </div>
+
+            <div class="tab-pane fade" id="cmsTab">
+                <div class="container-fluid px-4">
+
+                    <div class="row justify-content-center">
+                        <div class="col-md-12">
+                            <div class="preview-wrapper">
+                                <div class="cms-container" id="preview-container">
+                                    <div class="alert alert-info border-0"><i class="bi bi-info-circle-fill"></i> Mở <b>[Thêm Khối]</b> góc dưới trái để kéo thả (hoặc click) chèn các vùng nội dung mới. Click vào các tiêu đề để đổi màu và Icon.</div>
+                                    
+                                    <div class="section-master" id="wrap_header">
+                                        <div class="sm-toolbar"><button onclick="cmsToggleVis('header')"><i class="bi bi-eye"></i> Ẩn/Hiện Khối</button></div>
+                                        <div class="row align-items-center mb-4 border-bottom pb-3">
+                                            <div class="col-md-2 text-center editable-block" onclick="cmsEdit('logo', 'image', 'Đổi Logo Header (Link ảnh)')"><img id="p_logo" src="" class="cms-logo-img"><div class="edit-btn-overlay"><i class="bi bi-pencil"></i></div></div>
+                                            <div class="col-md-10 editable-block" onclick="cmsEdit('site_title', 'text', 'Tên Website (Cạnh Logo)')"><h3 id="p_site_title" class="fw-bold text-primary mb-0">Đang tải...</h3><div class="edit-btn-overlay"><i class="bi bi-pencil"></i></div></div>
+                                        </div>
+                                        
+                                        <div class="editable-block mt-3 mb-4 pt-3 pb-3 text-center border rounded shadow-sm bg-light" onclick="window.openMenuModal()">
+                                            <div class="fw-bold mb-2 small text-uppercase" style="color: #f15a3a;"><i class="bi bi-menu-button-wide"></i> Quản lý Thanh Menu (Bấm vào đây để sửa)</div>
+                                            <div class="d-flex justify-content-center gap-2 flex-wrap" id="p_header_menu_render">
+                                                </div>
+                                            <div class="edit-btn-overlay"><i class="bi bi-pencil"></i></div>
+                                        </div>
+
+                                        <div class="editable-block cms-hero" onclick="cmsEdit('hero', 'hero', 'Cập nhật Ảnh bìa Slide')"><i class="bi bi-images fs-1 d-block mb-2"></i> Click để Sửa Ảnh Nền Slide<div class="edit-btn-overlay"><i class="bi bi-pencil"></i></div></div>
+                                    </div>
+
+                                    <div class="section-master mt-4" id="wrap_news" style="border-color: #ff9800; background: #f8fafc;">
+                                        <div class="sm-toolbar" style="background: #ff9800;"><button onclick="cmsToggleVis('news')"><i class="bi bi-eye"></i> Ẩn/Hiện LLC NEWS</button></div>
+                                        <div class="text-center mb-4 editable-block" onclick="cmsEditNewsTitle()">
+                                            <h3 id="p_news_title" class="fw-bold" style="color: #112255; text-transform: uppercase;">LLC NEWS</h3>
+                                            <div style="width: 50px; height: 3px; background-color: #ff9800; margin: 10px auto;"></div>
+                                            <div class="edit-btn-overlay"><i class="bi bi-pencil"></i></div>
+                                        </div>
+                                        <div class="position-relative p-2">
+                                            <div class="text-center mb-3"><button class="btn btn-sm btn-outline-warning text-dark fw-bold" onclick="cmsAddNewsSlide()"><i class="bi bi-plus-circle"></i> Quản lý Ảnh LLC NEWS</button></div>
+                                            <div class="swiper newsSwiperPreview" style="padding-bottom: 30px;">
+                                                <div class="swiper-wrapper" id="cms_news_render"></div>
+                                                <div class="swiper-pagination"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="section-master mt-4" id="wrap_about" style="border-color: #28a745; background: #fff;">
+                                        <div class="sm-toolbar" style="background: #28a745;"><button onclick="cmsToggleVis('about')"><i class="bi bi-eye"></i> Ẩn/Hiện Khối Giới Thiệu (Ảnh & Chữ)</button></div>
+                                        <div class="row align-items-center p-3 editable-block" onclick="cmsEditAbout()" id="cms_about_bg" style="background-color: transparent; border-radius: 15px;">
+                                            <div class="col-md-5 text-center">
+                                                <img id="p_about_img" src="https://via.placeholder.com/600x400" class="w-100 rounded shadow" style="object-fit: cover;">
+                                            </div>
+                                            <div class="col-md-7 text-start mt-4 mt-md-0 ps-md-4">
+                                                <h2 id="p_about_title" class="fw-bold mb-3" style="color: #112255;">Đang tải...</h2>
+                                                <div id="p_about_desc" style="font-size: 16px; line-height: 1.6; color: #475569;">Đang tải...</div>
+                                            </div>
+                                            <div class="edit-btn-overlay"><i class="bi bi-pencil"></i></div>
+                                        </div>
+                                    </div>
+
+                                    <div class="section-master mt-4" id="wrap_activity" style="border-color: #f15a3a; background: #fff;">
+                                        <div class="sm-toolbar" style="background: #f15a3a; color: #fff;">
+                                            <button onclick="cmsToggleVis('activity')"><i class="bi bi-eye"></i> Ẩn/Hiện Hoạt Động</button>
+                                            <span class="mx-1">|</span>
+                                            <button onclick="cmsDeleteActivityBlock()"><i class="bi bi-trash"></i> Xóa Khối</button>
+                                        </div>
+                                        <div class="text-center mb-4 editable-block" onclick="cmsEditActivityTitle()">
+                                            <h3 id="p_activity_title" class="fw-bold" style="color: #112255; text-transform: uppercase;">...</h3>
+                                            <div style="width: 50px; height: 3px; background-color: #f15a3a; margin: 10px auto;"></div>
+                                            <div class="edit-btn-overlay"><i class="bi bi-pencil"></i></div>
+                                        </div>
+                                        <div class="position-relative p-2">
+                                            <div class="text-center mb-3"><button class="btn btn-sm btn-outline-primary fw-bold" onclick="cmsAddActivitySlide()"><i class="bi bi-plus-circle"></i> Quản lý Ảnh Hoạt Động</button></div>
+                                            <div class="swiper activitySwiper">
+                                                <div class="swiper-wrapper" id="cms_activity_render"></div>
+                                                <div class="swiper-button-next" style="color: #f15a3a;"></div>
+                                                <div class="swiper-button-prev" style="color: #f15a3a;"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="section-master mt-4" id="wrap_teacher_global" style="border-color: #00d5ff; background: #fff;">
+                                        <div class="sm-toolbar" style="background: #00d5ff; color: #112255;">
+                                            <button onclick="cmsToggleVis('teacher')"><i class="bi bi-eye"></i> Ẩn/Hiện Giảng Viên</button> 
+                                            <span class="mx-1">|</span> 
+                                            <button onclick="cmsDeleteGlobalTeacher()"><i class="bi bi-trash"></i> Xóa Khối</button>
+                                        </div>
+                                        <div class="section-master-header" style="border-bottom-color: #00d5ff;">
+                                            <h5 class="sm-title editable-block p-1 m-0" onclick="cmsEditTeacherTitle(null)" style="color:#00d5ff;">
+                                                <i class="bi bi-person-video3" id="p_teacher_icon_global"></i> <span id="p_teacher_title_global">Đội Ngũ Giảng Viên</span>
+                                                <div class="edit-btn-overlay"><i class="bi bi-pencil"></i></div>
+                                            </h5>
+                                            <button class="btn btn-sm btn-outline-info text-dark fw-bold" onclick="cmsAddTeacherCard(null)"><i class="bi bi-plus-circle"></i> Quản lý Giáo Viên</button>
+                                        </div>
+                                        <div class="p-3 rounded-4" style="background-color: transparent;">
+                                            <div class="swiper teacherSwiper globalTeacherSwiper">
+                                                <div class="swiper-wrapper" id="cms_global_teacher_render"></div>
+                                                <div class="swiper-pagination"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="drop-zone" ondrop="dropHandler(event, 'pos-top')" ondragover="allowDrop(event)" ondragleave="dragLeave(event)" ondragenter="allowDrop(event)"><i class="bi bi-download fs-4 me-2"></i> Kéo thả khối vào đây (Khu Vực 1)</div>
+                                    <div id="render_pos_top"></div>
+
+                                    <div class="section-master" id="wrap_intro">
+                                        <div class="sm-toolbar"><button onclick="cmsToggleVis('intro')"><i class="bi bi-eye"></i> Ẩn/Hiện Khối</button></div>
+                                        <div class="text-center mb-4 p-3 rounded-4 editable-block" id="cms_intro_bg_preview" onclick="cmsEdit('intro_bg_color', 'color', 'Đổi màu nền Khu vực Khám phá')" style="background-color: transparent;">
+                                            <div onclick="cmsEdit('sec1_title', 'text', 'Tiêu đề Khám Phá'); event.stopPropagation();" class="editable-block"><h2 id="p_sec1_title" class="fw-bold">...</h2><div class="edit-btn-overlay"><i class="bi bi-pencil"></i></div></div>
+                                            <div onclick="cmsEdit('sec1_desc', 'text', 'Mô tả Khám Phá'); event.stopPropagation();" class="editable-block"><p id="p_sec1_desc" class="text-muted">... </p><div class="edit-btn-overlay"><i class="bi bi-pencil"></i></div></div>
+                                        </div>
+                                    </div>
+
+                                    <div class="drop-zone" ondrop="dropHandler(event, 'pos-mid1')" ondragover="allowDrop(event)" ondragleave="dragLeave(event)" ondragenter="allowDrop(event)"><i class="bi bi-download fs-4 me-2"></i> Kéo thả khối vào đây (Khu Vực 2)</div>
+                                    <div id="render_pos_mid1"></div>
+
+                                    <div class="drop-zone" ondrop="dropHandler(event, 'pos-mid2')" ondragover="allowDrop(event)" ondragleave="dragLeave(event)" ondragenter="allowDrop(event)"><i class="bi bi-download fs-4 me-2"></i> Kéo thả khối vào đây (Khu Vực 3)</div>
+                                    <div id="render_pos_mid2"></div>
+
+                                    <div class="drop-zone" ondrop="dropHandler(event, 'pos-bottom')" ondragover="allowDrop(event)" ondragleave="dragLeave(event)" ondragenter="allowDrop(event)"><i class="bi bi-download fs-4 me-2"></i> Kéo thả khối vào đây (Khu Vực 4)</div>
+                                    <div id="render_pos_bottom"></div>
+
+                                    <div class="section-master p-4 mt-5 shadow-sm" style="background-color: #ffffff; border-color: #4dc4e6;" id="wrap_contact_form">
+                                        <div class="sm-toolbar bg-info text-dark"><button onclick="cmsToggleVis('contact_form')"><i class="bi bi-eye"></i> Ẩn/Hiện Form Liên Hệ Cuối Trang</button></div>
+                                        <div class="editable-block" onclick="cmsEditContactForm()">
+                                            <div class="text-center mb-4">
+                                                <h3 class="fw-bold text-uppercase" style="color: #112255;">ĐĂNG KÝ NHẬN <span style="background-color: #e31837; color: white; padding: 5px 20px; border-radius: 50px; display: inline-block;">TƯ VẤN NGAY</span></h3>
+                                                <p class="text-muted mt-2" style="font-size: 15px;">Vui lòng để lại thông tin phía dưới để được tư vấn miễn phí</p>
+                                            </div>
+                                            <div class="row g-4 align-items-stretch">
+                                                <div class="col-md-8">
+                                                    <div class="p-4 h-100" style="background-color: #4dc4e6; border-radius: 15px;">
+                                                        <div class="row g-3">
+                                                            <div class="col-12"><input type="text" class="form-control rounded-pill border-0" placeholder="Họ Và Tên *" disabled style="padding: 12px 20px; background: rgba(255,255,255,0.7);"></div>
+                                                            <div class="col-md-6"><input type="text" class="form-control rounded-pill border-0" placeholder="Điện thoại *" disabled style="padding: 12px 20px; background: rgba(255,255,255,0.7);"></div>
+                                                            <div class="col-md-6"><select class="form-select rounded-pill border-0" disabled style="padding: 12px 20px; background: rgba(255,255,255,0.7);"><option>Hình thức học</option></select></div>
+                                                            <div class="col-md-6"><input type="text" class="form-control rounded-pill border-0" placeholder="Địa chỉ email" disabled style="padding: 12px 20px; background: rgba(255,255,255,0.7);"></div>
+                                                            <div class="col-md-6"><select class="form-select rounded-pill border-0" disabled style="padding: 12px 20px; background: rgba(255,255,255,0.7);"><option>Tỉnh/ Thành phố *</option></select></div>
+                                                            <div class="col-12"><select class="form-select rounded-pill border-0" disabled style="padding: 12px 20px; background: rgba(255,255,255,0.7);"><option>Khóa học *</option></select></div>
+                                                            <div class="col-12"><button class="btn w-100 fw-bold rounded-pill text-white mt-2" style="background-color: #233066; padding: 14px;" disabled>TƯ VẤN NGAY</button></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="p-4 h-100 d-flex flex-column justify-content-center gap-3" style="background-color: #4dc4e6; border-radius: 15px;">
+                                                        <button class="btn text-white fw-bold rounded-pill d-flex justify-content-between align-items-center" style="background-color: #2b3a70; padding: 12px 20px; font-size: 16px;" disabled><i class="bi bi-hand-index-thumb"></i> NHẮN TIN NHANH <i class="bi bi-messenger fs-4"></i></button>
+                                                        <button class="btn text-white fw-bold rounded-pill d-flex justify-content-between align-items-center" style="background-color: #e31837; padding: 12px 20px; font-size: 16px;" disabled><span id="p_contact_phone">028 7308 3333 (Phím 0)</span> <i class="bi bi-telephone-fill fs-4"></i></button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="edit-btn-overlay"><i class="bi bi-pencil"></i></div>
+                                        </div>
+                                    </div>
+
+                                    <div class="section-master p-4 mt-5 shadow-sm" style="background-color: #ffffff; border-color: #e0e5ec;" id="wrap_footer">
+                                        <div class="sm-toolbar bg-secondary"><button onclick="cmsToggleVis('footer')"><i class="bi bi-eye"></i> Ẩn/Hiện Footer</button></div>
+                                        <div class="editable-block" onclick="cmsEditFooter()">
+                                            <div class="row align-items-center">
+                                                <div class="col-md-8 text-start">
+                                                    <img id="p_footer_logo" src="" style="height: 65px; object-fit: contain; margin-bottom: 18px;">
+                                                    <h5 id="p_footer_name" class="fw-bold mb-2 text-uppercase" style="color: #112255;">...</h5>
+                                                    <p id="p_footer_license" class="mb-1 small" style="color: #64748b;">...</p>
+                                                    <p id="p_footer_address" class="mb-3 small" style="color: #64748b;">...</p>
+                                                    <div class="pt-3" style="border-top: 1px solid #e0e5ec;">
+                                                        <p class="mb-0 small fw-bold" style="color: #333;"><i class="bi bi-shield-lock-fill text-success"></i> <span id="p_footer_privacy">...</span></p>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4 text-end">
+                                                    <div style="border-radius: 12px; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.1); margin-bottom: 15px;">
+                                                        <iframe id="p_footer_map" src="" width="100%" height="150px" frameborder="0" style="border:0;"></iframe>
+                                                    </div>
+                                                    <button class="btn w-100 fw-bold rounded-pill" style="background-color: #00d5ff; color: #112255; text-transform: uppercase; padding: 14px 25px;"><i class="bi bi-headset"></i> Tư vấn hỗ trợ</button>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="mt-4 pt-4 text-center" style="border-top: 1px dashed #e0e5ec;">
+                                                <div class="social-follow-card mx-auto" id="p_footer_social_card">
+                                                    <h6 id="p_footer_social_text" class="fw-bold mb-3" style="color: #112255;">Follow LLC - Trung Tâm Ngoại Ngữ Lê Lợi, tại:</h6>
+                                                    <div class="d-flex justify-content-center gap-3" id="p_footer_social_icons">
+                                                        </div>
+                                                </div>
+                                            </div>
+                                            <div class="edit-btn-overlay"><i class="bi bi-pencil"></i></div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="modal fade" id="editModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered"><div class="modal-content">
+            <div class="modal-header bg-light"><h5 class="modal-title fw-bold text-primary">Sửa Ghi Chú Khách</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+            <div class="modal-body">
+                <input type="hidden" id="edit_id"> 
+                <div class="row">
+                    <div class="col-md-6 mb-3"><label class="small fw-bold">Tên khách</label><input type="text" class="form-control" id="edit_name"></div>
+                    <div class="col-md-6 mb-3"><label class="small fw-bold">SĐT</label><input type="text" class="form-control" id="edit_phone"></div>
+                    <div class="col-md-6 mb-3"><label class="small fw-bold">Email</label><input type="email" class="form-control" id="edit_email"></div>
+                    <div class="col-md-6 mb-3"><label class="small fw-bold">Thành phố</label><input type="text" class="form-control" id="edit_city"></div>
+                    <div class="col-md-4 mb-3"><label class="small fw-bold">Độ tuổi</label><input type="text" class="form-control" id="edit_age"></div>
+                    <div class="col-md-4 mb-3"><label class="small fw-bold">Hình thức</label><input type="text" class="form-control" id="edit_study"></div>
+                    <div class="col-md-4 mb-3"><label class="small fw-bold">Khóa học</label><input type="text" class="form-control" id="edit_course"></div>
+                    <div class="col-12 mb-3"><label class="small fw-bold">Ghi chú</label><textarea class="form-control" id="edit_note" rows="3"></textarea></div>
+                </div>
+            </div>
+            <div class="modal-footer border-0"><button type="button" class="btn btn-primary w-100" id="btnSaveEdit">Lưu Ghi Chú</button></div>
+        </div></div>
+    </div>
+
+    <div class="modal fade form-config-modal" id="formConfigModal" tabindex="-1">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content border-0">
+                <div class="modal-header border-0 pb-0 pt-4 px-4 position-relative">
+                    <h4 class="modal-title w-100 text-center fs-5">ĐĂNG KÝ THÔNG TIN (CẤU HÌNH TÙY CHỌN FORM)</h4>
+                    <button type="button" class="btn-close position-absolute" style="top: 20px; right: 20px;" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body px-4 py-4">
+                    <div class="row">
+                        <div class="col-md-6 border-end pe-md-4">
+                            <div class="mb-4">
+                                <label class="text-white mb-2 fw-bold" style="font-size: 14px;">Độ tuổi</label>
+                                <div id="render_age_options" class="mb-3" style="max-height: 180px; overflow-y: auto;"></div>
+                                <div class="input-group shadow-sm">
+                                    <input type="text" id="new_age_input" class="form-control border-0" style="padding: 10px 15px;" placeholder="Thêm độ tuổi mới...">
+                                    <button class="btn btn-light text-primary fw-bold px-3" onclick="window.addAgeOption()">Thêm</button>
+                                </div>
+                            </div>
+                            <div class="mb-4">
+                                <label class="text-white mb-2 fw-bold" style="font-size: 14px;">Khóa học đăng ký</label>
+                                <div id="render_course_options" class="mb-3" style="max-height: 180px; overflow-y: auto;"></div>
+                                <div class="input-group shadow-sm">
+                                    <input type="text" id="new_course_input" class="form-control border-0" style="padding: 10px 15px;" placeholder="Thêm khóa học mới...">
+                                    <button class="btn btn-light text-primary fw-bold px-3" onclick="window.addCourseOption()">Thêm</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 ps-md-4">
+                            <div class="mb-4">
+                                <label class="text-white mb-2 fw-bold" style="font-size: 14px;">Hình thức học (Mới)</label>
+                                <div id="render_study_options" class="mb-3" style="max-height: 180px; overflow-y: auto;"></div>
+                                <div class="input-group shadow-sm">
+                                    <input type="text" id="new_study_input" class="form-control border-0" style="padding: 10px 15px;" placeholder="Thêm hình thức học...">
+                                    <button class="btn btn-light text-primary fw-bold px-3" onclick="window.addStudyOption()">Thêm</button>
+                                </div>
+                            </div>
+                            <div class="mb-4">
+                                <label class="text-white mb-2 fw-bold" style="font-size: 14px;">Tỉnh/Thành phố (Mới)</label>
+                                <div id="render_city_options" class="mb-3" style="max-height: 180px; overflow-y: auto;"></div>
+                                <div class="input-group shadow-sm">
+                                    <input type="text" id="new_city_input" class="form-control border-0" style="padding: 10px 15px;" placeholder="Thêm thành phố...">
+                                    <button class="btn btn-light text-primary fw-bold px-3" onclick="window.addCityOption()">Thêm</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="button" class="btn w-100 btn-submit-config text-uppercase mt-2" onclick="window.saveFormConfig()">Lưu Cấu Hình Tùy Chọn</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade form-config-modal" id="menuConfigModal" tabindex="-1">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content border-0" style="background-color: #112255;">
+                <div class="modal-header border-0 pb-0 pt-4 px-4 position-relative">
+                    <h4 class="modal-title w-100 text-center fs-5 text-white"><i class="bi bi-list"></i> QUẢN LÝ MENU TRÊN CÙNG</h4>
+                    <button type="button" class="btn-close btn-close-white position-absolute" style="top: 20px; right: 20px;" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body px-4 py-4">
+                    <div class="row">
+                        <div class="col-md-7 border-end pe-md-4 border-secondary">
+                            <label class="text-white mb-2 fw-bold">Danh sách Menu hiện tại:</label>
+                            <div class="alert alert-dark border-0 py-2 small fw-bold mb-3"><i class="bi bi-info-circle"></i> Bấm "Lưu Cấu Hình" sau khi thêm hoặc xóa để áp dụng.</div>
+                            <div id="render_menu_options" class="mb-3 pe-2" style="max-height: 250px; overflow-y: auto;"></div>
+                        </div>
+                        <div class="col-md-5 ps-md-4">
+                            <label class="text-white mb-3 fw-bold">Thêm Menu Mới:</label>
+                            <input type="text" id="new_menu_name" class="form-control mb-3" placeholder="Tên hiển thị (VD: VỀ CHÚNG TÔI)">
+                            <select id="new_menu_type" class="form-select mb-3 fw-bold text-primary" onchange="window.toggleMenuType()">
+                                <option value="link">1. Chuyển hướng Link/Web</option>
+                                <option value="phone">2. Gọi Số Điện Thoại (Hotline)</option>
+                            </select>
+                            <input type="text" id="new_menu_val" class="form-control mb-3" placeholder="Nhập Link (VD: #wrap_about)">
+                            <button class="btn btn-info w-100 fw-bold" onclick="window.addMenuOption()"><i class="bi bi-plus-lg"></i> Thêm Vào Menu</button>
+                        </div>
+                    </div>
+                    <button type="button" class="btn w-100 text-white text-uppercase mt-4 fw-bold" style="background-color: #e31837; padding: 14px;" onclick="window.saveMenuConfig()">LƯU CẤU HÌNH MENU</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+    <script type="module" src="srcpt/srcpt.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+     <link rel="icon" type="image/png"
+          href="https://raw.githubusercontent.com/trungtamleloingoaingu-source/leloi-upload/main/uploads/LOGO_KHONG%20NEN.png">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Trung tâm Ngoại ngữ - Công nghệ Lê Lợi tại Phan Thiết</title>
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://sites.google.com/view/test1-web/trangchu" />
+    <meta property="og:title" content="Trung tâm Ngoại ngữ - Công nghệ Lê Lợi tại Phan Thiết" />
+    <meta property="og:description" content="Khám phá tương lai – Làm chủ công nghệ" />
+    <meta property="og:image" content="https://raw.githubusercontent.com/leloitrungtam-glitch/leloi/main/uploads/1777449025951_img-tt-1.jpg" />
+        <meta name="twitter:image" content="https://raw.githubusercontent.com/leloitrungtam-glitch/leloi/main/uploads/1777449025951_img-tt-1.jpg">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Trung tâm Ngoại ngữ - Công nghệ Lê Lợi tại Phan Thiết">
+    <meta name="twitter:description" content="Khám phá tương lai – Làm chủ công nghệ">
+    <meta name="twitter:image" content="https://raw.githubusercontent.com/leloitrungtam-glitch/leloi/main/uploads/1777449025951_img-tt-1.jpg">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <link rel="stylesheet" href="style/style.css">
+
+    <style>
+        *, body, h1, h2, h3, h4, h5, h6, p, a, span, button, input, select, option, textarea, div {
+            font-family: 'Montserrat', sans-serif !important;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="page-loader">
+        <div class="loader-ring">
+            <img id="loader_img" src="https://media.leloipt.edu.vn/Media/30_TH1041/Images/footer-logo-leloi83f2a8da-5-e.png" alt="Loading Logo" class="loader-logo">
+        </div>
+        <div class="loader-text">ĐANG TẢI DỮ LIỆU...</div>
+    </div>
+
+    <header class="main-header" id="wrap_header">
+        <div class="header-left">
+            <img id="cms_logo" src="https://media.leloipt.edu.vn/Media/30_TH1041/Images/footer-logo-leloi83f2a8da-5-e.png" alt="Logo" class="header-logo">
+            <h1 id="cms_site_title" class="header-title">Đang tải...</h1>
+        </div>
+        
+        <nav class="header-nav d-none d-lg-flex" id="desktop_nav">
+            </nav>
+        
+        <button class="menu-toggle-btn d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileMenu">
+            <i class="bi bi-list" style="font-size: 32px;"></i>
+        </button>
+    </header>
+
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="mobileMenu" style="width: 300px;">
+        <div class="offcanvas-header border-bottom">
+            <h5 class="offcanvas-title fw-bold text-primary" id="mobileMenuLabel"><i class="bi bi-grid-fill"></i> DANH MỤC</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body d-flex flex-column gap-2" id="mobile_nav_render">
+            </div>
+    </div>
+
+    <section class="hero-section" id="wrap_hero" data-aos="fade-in" data-aos-duration="1000">
+        <div class="swiper heroSwiper" style="width: 100%; height: 100%;">
+            <div class="swiper-wrapper" id="hero_render"></div>
+            <div class="hero-indicators swiper-pagination"></div>
+        </div>
+    </section>
+
+    <section id="wrap_news" class="news-section" data-aos="fade-up" style="display: none;">
+        <div class="container-fluid">
+            <div class="section-heading mb-4">
+                <h2 id="cms_news_title" style="color: #112255; font-weight: 800; font-size: 24px;">LLC NEWS</h2>
+            </div>
+            <div class="swiper newsSwiper">
+                <div class="swiper-wrapper" id="news_render"></div>
+                <div class="swiper-pagination"></div>
+            </div>
+        </div>
+    </section>
+
+    <section class="content-section">
+        <div class="content-container">
+            <button class="btn-fixed-register" data-bs-toggle="modal" data-bs-target="#registrationModal" data-aos="fade-up" data-aos-delay="300">
+                <i class="bi bi-pencil-square"></i> ĐĂNG KÝ NGAY
+            </button>
+
+            <button id="backToTopBtn" title="Lên đầu trang"><i class="bi bi-arrow-up-short"></i></button>
+
+            <div id="wrap_about" class="mb-5 pt-5" data-aos="fade-up" style="display: none;">
+                <div class="row align-items-center p-4 p-md-5" id="cms_about_bg" style="border-radius: 20px;">
+                    <div class="col-md-5 text-center mb-4 mb-md-0">
+                        <img id="p_about_img" src="" class="w-100 rounded-4 shadow" style="object-fit: cover; max-height: 450px; aspect-ratio: 16/10;">
+                    </div>
+                    <div class="col-md-7 text-start ps-md-5">
+                        <h2 id="p_about_title" class="fw-bold mb-4" style="font-size: 36px; line-height: 1.3;">Đang tải...</h2>
+                        <div id="p_about_desc" style="font-size: 17px; line-height: 1.8;">Đang tải...</div>
+                    </div>
+                </div>
+            </div>
+
+           
+
+            <div id="render_pos_top" class="mb-5"></div>
+
+            <div class="section-heading mt-5" id="wrap_intro" data-aos="fade-up">
+                <h2 id="cms_sec1_title">Đang tải...</h2>
+                <p id="cms_sec1_desc">Đang tải nội dung từ máy chủ...</p>
+            </div>
+
+            <div id="render_pos_mid1" class="mb-5"></div>
+
+            <div id="wrap_global_tech" class="mb-5" data-aos="fade-up">
+                <div class="section-heading mb-4" style="text-align: left;">
+                    <h2 id="cms_tech_title" style="color: #f15a3a; font-size: 32px;"><i class="bi bi-card-checklist"></i> Khối Thông Tin 1</h2>
+                </div>
+                <div class="swiper globalTechSwiper techSwiper">
+                    <div class="swiper-wrapper" id="tech_cards_container"></div>
+                    <div class="swiper-pagination"></div>
+                </div>
+            </div>
+
+            <div id="render_pos_mid2" class="mb-5"></div>
+
+            <div class="english-programs-section mb-5" id="wrap_global_english" data-aos="fade-up">
+                <div class="section-heading mb-4" style="margin-bottom: 30px; text-align: left; border-bottom: 2px dashed #cbd5e1; padding-bottom: 15px;">
+                    <h2 id="cms_english_title" style="color: #112255; font-size: 32px; margin-bottom: 0;"><i class="bi bi-book"></i> Khối Thông Tin 2</h2>
+                </div>
+                <div class="swiper globalEnglishSwiper englishSwiper">
+                    <div class="swiper-wrapper" id="english_cards_container"></div>
+                    <div class="swiper-pagination"></div>
+                </div>
+            </div>
+
+            <div id="render_pos_bottom" class="mb-5"></div>
+
+            <div id="wrap_global_teacher" class="mb-5" data-aos="fade-up" style="display: none;">
+                <div class="section-heading mb-4">
+                    <h2 id="cms_teacher_title" style="font-size: 32px;"><i class="bi bi-person-video3"></i> Đội Ngũ Giảng Viên</h2>
+                </div>
+                <div class="swiper globalTeacherSwiper teacherSwiper">
+                    <div class="swiper-wrapper" id="global_teacher_render"></div>
+                    <div class="swiper-pagination"></div>
+                    <div class="swiper-button-next"></div>
+                    <div class="swiper-button-prev"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="wrap_contact_form" class="content-section" style="background-color: #f8fafc; border-top: 1px solid #e0e5ec;" data-aos="fade-up">
+        <div class="container py-5">
+            <div class="text-center mb-5">
+                <h2 class="fw-bold text-uppercase" style="color: #112255;">
+                    ĐĂNG KÝ NHẬN 
+                    <span class="advice-highlight-wrapper">
+                        <span class="advice-highlight">TƯ VẤN NGAY</span>
+                        <svg class="advice-sparkle" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M 10 30 L 25 35 L 20 10 L 35 30 L 55 15 L 45 40 L 60 50" stroke="#38bdf8" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+                        </svg>
+                    </span>
+                </h2>
+                <p class="text-muted">Vui lòng để lại thông tin phía dưới để được tư vấn miễn phí</p>
+            </div>
+
+            <div class="row g-4">
+                <div class="col-lg-8">
+                    <div class="p-4 p-md-5" style="background-color: #4dc4e6; border-radius: 20px;">
+                        <form id="form_footer">
+                            <div class="row g-3">
+                                <div class="col-12">
+                                    <input type="text" id="f_name" class="form-control contact-footer-input" placeholder="Họ Và Tên *" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <input type="tel" id="f_phone" class="form-control contact-footer-input" placeholder="Điện thoại *" pattern="0[0-9]{9}" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <select id="f_study" class="form-select contact-footer-input" required>
+                                        <option value="" disabled selected>Hình thức học</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <input type="email" id="f_email" class="form-control contact-footer-input" placeholder="Địa chỉ email">
+                                </div>
+                                <div class="col-md-6">
+                                    <select id="f_city" class="form-select contact-footer-input" required>
+                                        <option value="" disabled selected>Tỉnh/ Thành phố *</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <select id="f_course" class="form-select contact-footer-input" required>
+                                        <option value="" disabled selected>Khóa học đăng ký *</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <select id="f_age" class="form-select contact-footer-input" required>
+                                        <option value="" disabled selected>Độ tuổi *</option>
+                                    </select>
+                                </div>
+                                <div class="col-12 mt-4">
+                                    <button type="submit" class="btn btn-submit-dark w-100 text-uppercase">TƯ VẤN NGAY</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="p-4 h-100 d-flex flex-column justify-content-center gap-3" style="background-color: #4dc4e6; border-radius: 20px;">
+                        <a href="#" id="link_messenger" target="_blank" class="btn text-white fw-bold rounded-pill d-flex justify-content-between align-items-center" style="background-color: #2b3a70; padding: 15px 25px; text-decoration: none;">
+                            <span>NHẮN TIN NHANH</span> <i class="bi bi-messenger fs-4"></i>
+                        </a>
+                        <a href="tel:02873083333" id="link_phone" class="btn text-white fw-bold rounded-pill d-flex justify-content-between align-items-center" style="background-color: #e31837; padding: 15px 25px; text-decoration: none;">
+                            <span id="display_phone">028 7308 3333 (Phím 0)</span> <i class="bi bi-telephone-fill fs-4"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="main-footer" id="wrap_footer" data-aos="fade-up">
+        <div class="footer-container">
+            <div class="footer-left">
+                <img id="f_logo" src="" alt="Footer Logo" class="f-logo">
+              <h5 id="f_name" class="f-name">Trung tâm Ngoại ngữ – Công nghệ Lê Lợi (thuộc Trường THCS & THPT Lê Lợi, Phan Thiết)</h5>
+                <p id="f_license" class="f-text">...</p>
+                <p id="f_address" class="f-text">...</p>
+                <div class="f-privacy"><i class="bi bi-shield-lock-fill text-success"></i> <span id="f_privacy">...</span></div>
+            </div>
+            <div class="footer-right">
+                <div class="f-map-wrapper">
+                    <iframe id="f_map" src="" width="100%" height="150px" frameborder="0" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+                </div>
+            </div>
+            
+            <div id="footer_social_render" class="w-100 mt-4 pt-3 d-flex justify-content-center"></div>
+
+        </div>
+    </footer>
+
+    <div class="modal fade" id="registrationModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content custom-reg-modal">
+                <div class="modal-header border-0 pb-0"><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button></div>
+                <div class="modal-body px-4 pb-4 pt-0">
+                    <h4 class="text-uppercase mb-4 text-center fw-bold">Đăng ký thông tin</h4>
+                    <form id="form_popup">
+                        <div class="form-floating mb-3"><input type="text" class="form-control" id="p_name" placeholder="Họ và Tên" required><label>Họ và Tên *</label></div>
+                        <div class="form-floating mb-3"><input type="tel" class="form-control" id="p_phone" placeholder="SĐT" pattern="0[0-9]{9}" required><label>Số điện thoại *</label></div>
+                        <div class="form-floating mb-3"><input type="email" class="form-control" id="p_email" placeholder="Email"><label>Địa chỉ Email</label></div>
+                        
+                        <div class="row g-2">
+                            <div class="col-md-6 mb-3">
+                                <div class="form-floating"><select class="form-select" id="p_city" required><option value="" disabled selected>Chọn Tỉnh/Thành</option></select><label>Tỉnh/ Thành phố *</label></div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <div class="form-floating"><select class="form-select" id="p_age" required><option value="" disabled selected>Chọn độ tuổi</option></select><label>Độ tuổi *</label></div>
+                            </div>
+                        </div>
+                        <div class="form-floating mb-3">
+    <select class="form-select" id="p_study" required>
+        <option value="" disabled selected>Chọn hình thức học</option>
+    </select>
+    <label>Hình thức học *</label>
+</div>
+                        <div class="form-floating mb-3"><select class="form-select" id="p_course" required><option value="" disabled selected>Khóa học đăng ký</option></select><label>Khóa học đăng ký *</label></div>
+                        <div class="form-check mb-4 mt-2"><input class="form-check-input" type="checkbox" id="allow" checked required><label class="form-check-label">Tôi đồng ý nhận tư vấn chi tiết.</label></div>
+                        <button type="submit" class="btn btn-submit text-uppercase">ĐĂNG KÝ THAM GIA</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="detailModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+            <div class="modal-content" style="border-radius: 20px; border: none; box-shadow: 0 20px 50px rgba(0,0,0,0.3);">
+                <div class="modal-header bg-light" style="border-radius: 20px 20px 0 0; border-bottom: 2px solid #e0e5ec;">
+                    <h5 class="modal-title fw-bold text-primary"><i class="bi bi-info-circle-fill"></i> Thông tin chi tiết</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4" id="detailModalBody" style="font-size: 16px; line-height: 1.7; color: #333;">
+                    </div>
+                <div class="modal-footer border-0 pb-4 justify-content-center">
+                    <button type="button" class="btn btn-secondary px-4 py-2" data-bs-dismiss="modal" style="border-radius: 50px; font-weight: bold;">Đóng</button>
+                    <button type="button" class="btn px-4 py-2" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#registrationModal" style="border-radius: 50px; font-weight: bold; background-color: var(--primary-color); color: white;">Đăng Ký Tư Vấn Ngay</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="loading"><img src="https://doodles.google/static/71a12b05f17e71ab1ca4d61ccae6c98854bb65b40f0d8ece82be1f661088db6e.loading.gif" style="width: 120px;"></div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+    <script type="module" src="srcpt/srcpt.js"></script>
+
+</body>
+</html>
