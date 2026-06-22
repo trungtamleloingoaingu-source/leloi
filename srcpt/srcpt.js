@@ -330,8 +330,13 @@ onValue(ref(db, 'pageContent'), (snapshot) => {
             if(data.footer_data) { 
                 updateIMG('f_logo', data.footer_data.logo); updateHTML('f_name', data.footer_data.name); updateHTML('f_license', data.footer_data.license); updateHTML('f_address', data.footer_data.address); updateHTML('f_privacy', data.footer_data.privacy); 
                 const mapEl = document.getElementById('f_map'); 
-                if(mapEl && data.footer_data.map_lat && data.footer_data.map_lng) { mapEl.src = `https://maps.google.com/maps?q=${data.footer_data.map_lat},${data.footer_data.map_lng}&hl=vi&z=16&output=embed&iwloc=near`; mapEl.style.width = data.footer_data.map_w || '100%'; mapEl.style.height = data.footer_data.map_h || '150px'; } 
+               if(mapEl && data.footer_data.map_lat && data.footer_data.map_lng) { 
+    mapEl.src = `https://maps.google.com/maps?q=${data.footer_data.map_lat},${data.footer_data.map_lng}&hl=vi&z=16&t=k&output=embed`; 
+    mapEl.style.width = data.footer_data.map_w || '100%'; 
+    mapEl.style.height = data.footer_data.map_h || '150px'; 
+}
             }
+            
             
             if (data.footer_social && document.getElementById('footer_social_render')) {
                 let s = data.footer_social;
