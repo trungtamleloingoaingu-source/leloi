@@ -430,7 +430,7 @@ div#loading { position: fixed; top: 0; left: 0; width: 100%; height: 100vh; disp
 .footer-social-text { color: #112255; font-weight: 700; font-size: 18px; margin-bottom: 20px; }
 .social-icons-wrapper { display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; }
 .social-icon-btn { display: flex; align-items: center; justify-content: center; width: 45px; height: 45px; border-radius: 50%; border: 2px solid #112255; color: #112255; font-size: 20px; text-decoration: none !important; transition: all 0.3s ease; background-color: transparent; }
-.social-icon-btn:hover { transform: translateY(-3px); background-color: #e31837 !important; border-color: #e31837 !important; color: white !important; box-shadow: 0 8px 20px rgba(227, 24, 55, 0.4) !important; }
+.social-icon-btn:hover { transform: translateY(-3px); background-color: #f65e18 !important; border-color: #e31837 !important; color: white !important; box-shadow: 0 8px 20px rgba(227, 24, 55, 0.4) !important; }
 .social-icon-btn .zalo-text { font-size: 13px; font-weight: 700; line-height: 1; }
 @media (max-width: 720px) {
     .footer-social-card { padding: 20px; border-radius: 15px; }
