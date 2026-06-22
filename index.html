@@ -35,6 +35,21 @@
         *, body, h1, h2, h3, h4, h5, h6, p, a, span, button, input, select, option, textarea, div {
             font-family: 'Montserrat', sans-serif !important;
         }
+
+        /* --- BẮT ĐẦU: FIX LỖI LỆCH NÚT CHẤM TRÒN SWIPER --- */
+        .swiper-pagination {
+            position: absolute !important;
+            width: 100% !important;
+            left: 0 !important;
+            display: flex !important;
+            justify-content: center !important;
+            align-items: center !important;
+            padding: 0 !important;
+        }
+        .swiper-pagination-bullet {
+            margin: 0 5px !important; /* Tạo khoảng cách đều 2 bên cho các nút */
+        }
+        /* --- KẾT THÚC FIX --- */
     </style>
 </head>
 <body>
@@ -72,7 +87,8 @@
     <section class="hero-section" id="wrap_hero" data-aos="fade-in" data-aos-duration="1000">
         <div class="swiper heroSwiper" style="width: 100%; height: 100%;">
             <div class="swiper-wrapper" id="hero_render"></div>
-            <div class="hero-indicators swiper-pagination"></div>
+            <div class="swiper-button-next hero-nav-btn"></div>
+            <div class="swiper-button-prev hero-nav-btn"></div>
         </div>
     </section>
 
