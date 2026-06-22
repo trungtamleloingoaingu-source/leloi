@@ -82,21 +82,20 @@ window.addEventListener('load', () => {
 
 window.showDetailModal = (encodedContent) => {
     const modalBody = document.getElementById('detailModalBody');
-    // [NÂNG CẤP MƯỢT] Reset hiệu ứng tức thì, sau đó dựng khung hình mới với gia tốc
+    // Reset hiệu ứng: loại bỏ transform nhảy nhót để phù hợp với hiệu ứng mở mật thư của CSS
     modalBody.style.transition = 'none';
     modalBody.style.opacity = '0';
-    modalBody.style.transform = 'translateY(20px) scale(0.98)';
+    modalBody.style.transform = 'none'; 
     modalBody.innerHTML = decodeURIComponent(encodedContent);
     
     let detailModal = bootstrap.Modal.getOrCreateInstance(document.getElementById('detailModal'));
     detailModal.show();
     
-    // Sử dụng double requestAnimationFrame để đảm bảo CSS Engine đã ghi nhận trạng thái gốc trước khi bung hiệu ứng
     requestAnimationFrame(() => {
         requestAnimationFrame(() => {
-            modalBody.style.transition = 'all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1)';
+            // Cho text mờ dần hiện lên từ từ (delay 0.5s cho khớp nhịp mở của mật thư CSS)
+            modalBody.style.transition = 'opacity 1.2s ease-out 0.5s';
             modalBody.style.opacity = '1';
-            modalBody.style.transform = 'translateY(0) scale(1)';
         });
     });
 };
@@ -381,10 +380,11 @@ onValue(ref(db, 'pageContent'), (snapshot) => {
                     breakpoints: { 768: { slidesPerView: 2, spaceBetween: 20 }, 1024: { slidesPerView: 3, spaceBetween: 30 } }
                 };
 
+                // ĐÃ ĐỔI PAGINATION THÀNH NAVIGATION Ở SWIPER NÀY
                 window.cmsSwipers.push(new Swiper('.heroSwiper', { 
                     slidesPerView: 1, loop: true, slideToClickedSlide: true, speed: 1000,
                     autoplay: { delay: 4000, disableOnInteraction: false }, 
-                    pagination: { el: '.hero-indicators', clickable: true } 
+                    navigation: { nextEl: '.heroSwiper .swiper-button-next', prevEl: '.heroSwiper .swiper-button-prev' } 
                 }));
                 
                 window.cmsSwipers.push(new Swiper('.newsSwiper', { 
