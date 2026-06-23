@@ -50,6 +50,21 @@
             margin: 0 5px !important; /* Tạo khoảng cách đều 2 bên cho các nút */
         }
         /* --- KẾT THÚC FIX --- */
+
+        /* --- CSS FIX RESPONSIVE FORM ĐĂNG KÝ TRÊN ĐIỆN THOẠI --- */
+        .contact-glass-box {
+            max-width: 380px;
+            margin-left: 20%;
+        }
+        @media (max-width: 768px) {
+            .contact-glass-box {
+                margin-left: auto !important;
+                margin-right: auto !important;
+                width: 92% !important;
+                max-width: 100% !important;
+                padding: 20px !important;
+            }
+        }
     </style>
 </head>
 <body>
@@ -115,7 +130,7 @@
             <div id="wrap_about" class="mb-5 pt-5" data-aos="fade-up" style="display: none;">
                 <div class="row align-items-center p-4 p-md-5" id="cms_about_bg" style="border-radius: 20px;">
                     <div class="col-md-5 text-center mb-4 mb-md-0">
-                        <img id="p_about_img" src="" class="w-100 rounded-4 shadow" style="object-fit: cover; max-height: 450px; aspect-ratio: 16/10;">
+                        <img id="p_about_img" src="" class="w-100 rounded-4" style="object-fit: cover; max-height: 450px; aspect-ratio: 16/10;">
                     </div>
                     <div class="col-md-7 text-start ps-md-5">
                         <h2 id="p_about_title" class="fw-bold mb-4" style="font-size: 36px; line-height: 1.3;">Đang tải...</h2>
@@ -173,72 +188,48 @@
         </div>
     </section>
 
-    <section id="wrap_contact_form" class="content-section" style="background-color: #f8fafc; border-top: 1px solid #e0e5ec;" data-aos="fade-up">
-        <div class="container py-5">
-            <div class="text-center mb-5">
-                <h2 class="fw-bold text-uppercase" style="color: #112255;">
-                    ĐĂNG KÝ NHẬN 
-                    <span class="advice-highlight-wrapper">
-                        <span class="advice-highlight">TƯ VẤN NGAY</span>
-                        <svg class="advice-sparkle" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M 10 30 L 25 35 L 20 10 L 35 30 L 55 15 L 45 40 L 60 50" stroke="#38bdf8" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none" />
-                        </svg>
-                    </span>
-                </h2>
-                <p class="text-muted">Vui lòng để lại thông tin phía dưới để được tư vấn miễn phí</p>
-            </div>
-
-            <div class="row g-4">
-                <div class="col-lg-8">
-                    <div class="p-4 p-md-5" style="background-color: #4dc4e6; border-radius: 20px;">
-                        <form id="form_footer">
-                            <div class="row g-3">
-                                <div class="col-12">
-                                    <input type="text" id="f_name" class="form-control contact-footer-input" placeholder="Họ Và Tên *" required>
-                                </div>
-                                <div class="col-md-6">
-                                    <input type="tel" id="f_phone" class="form-control contact-footer-input" placeholder="Điện thoại *" pattern="0[0-9]{9}" required>
-                                </div>
-                                <div class="col-md-6">
-                                    <select id="f_study" class="form-select contact-footer-input" required>
-                                        <option value="" disabled selected>Hình thức học</option>
-                                    </select>
-                                </div>
-                                <div class="col-md-6">
-                                    <input type="email" id="f_email" class="form-control contact-footer-input" placeholder="Địa chỉ email">
-                                </div>
-                                <div class="col-md-6">
-                                    <select id="f_city" class="form-select contact-footer-input" required>
-                                        <option value="" disabled selected>Tỉnh/ Thành phố *</option>
-                                    </select>
-                                </div>
-                                <div class="col-md-6">
-                                    <select id="f_course" class="form-select contact-footer-input" required>
-                                        <option value="" disabled selected>Khóa học đăng ký *</option>
-                                    </select>
-                                </div>
-                                <div class="col-md-6">
-                                    <select id="f_age" class="form-select contact-footer-input" required>
-                                        <option value="" disabled selected>Độ tuổi *</option>
-                                    </select>
-                                </div>
-                                <div class="col-12 mt-4">
-                                    <button type="submit" class="btn btn-submit-dark w-100 text-uppercase">TƯ VẤN NGAY</button>
+<section id="wrap_contact_form" class="content-section p-0 mt-5 position-relative" style="border-top: 1px solid #e0e5ec; overflow: hidden; margin-bottom: 60px;" data-aos="fade-up">        
+        <img id="client_contact_bg" src="https://media.leloipt.edu.vn/Media/30_TH1041/Images/banner-leloi83f2a8da-5-e.jpg" alt="Background" class="position-absolute w-100 h-100" style="object-fit: cover; top: 0; left: 0; z-index: 0;">
+        
+        <div class="position-relative z-2 p-0 w-100 d-flex align-items-center" style="min-height: 500px; background: rgba(0,0,0,0.1);">
+            <div class="row w-100 m-0 align-items-center justify-content-center justify-content-md-start">
+                
+                <div class="col-12 col-md-6 col-lg-4 p-4 my-4 contact-glass-box" style="background: rgba(255, 255, 255, 0.65); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-right: 1px solid rgba(255,255,255,0.4); border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+                    <div class="text-center mb-3">
+                        <h4 class="fw-bold mb-1" style="color: #112255; font-size: 22px;" id="client_contact_title">Đăng Ký Tư Vấn</h4>
+                        <h5 class="fw-bold" style="color: #f15a3a; font-size: 16px;" id="client_contact_subtitle">Nhận Ngay 1 Tháng Học Miễn Phí</h5>
+                    </div>
+                    
+                    <form id="form_footer">
+                        <div class="row g-3">
+                            <div class="col-12"><input type="text" id="f_name" class="form-control rounded-pill border-0 shadow-sm" placeholder="Họ và tên (*)" required style="padding: 10px 20px; background: #ffffff; font-size: 14px;"></div>
+                            
+                            <div class="col-12"><input type="tel" id="f_phone" class="form-control rounded-pill border-0 shadow-sm" placeholder="Số điện thoại (*)" pattern="0[0-9]{9}" required style="padding: 10px 20px; background: #ffffff; font-size: 14px;"></div>
+                            
+                            <div class="col-12"><select id="f_course" class="form-select rounded-pill border-0 shadow-sm" required style="padding: 10px 20px; background: #ffffff; font-size: 14px;"><option value="" disabled selected>Vui lòng chọn khoá học *</option></select></div>
+                            
+                            <div class="col-12"><select id="f_city" class="form-select rounded-pill border-0 shadow-sm" required style="padding: 10px 20px; background: #ffffff; font-size: 14px;"><option value="" disabled selected>Vui lòng chọn tỉnh/thành phố *</option></select></div>
+                            
+                            <div class="col-12"><select id="f_study" class="form-select rounded-pill border-0 shadow-sm" required style="padding: 10px 20px; background: #ffffff; font-size: 14px;"><option value="" disabled selected>Vui lòng chọn trung tâm *</option></select></div>
+                            
+                            <div class="col-12 d-none"><input type="email" id="f_email" value=""><select id="f_age"><option value="Chưa xác định" selected>Chưa xác định</option></select></div>
+                            
+                            <div class="col-12 d-flex align-items-start mt-2">
+                                <div class="form-check">
+                                    <input class="form-check-input mt-1" type="checkbox" checked required id="clientConsentCheck">
+                                    <label class="form-check-label text-start ms-1" for="clientConsentCheck" style="font-size: 10.5px; color: #112255; line-height: 1.4; font-weight: 500;">
+                                        Bằng việc đăng ký thông tin, bạn đồng ý cho phép Lê Lợi liên lạc thông qua các hình thức: cuộc gọi, tin nhắn, email nhằm mục đích tư vấn các chương trình Anh ngữ & nghiên cứu thị trường.
+                                    </label>
                                 </div>
                             </div>
-                        </form>
-                    </div>
+                            
+                            <div class="col-12 text-center mt-2">
+                                <button type="submit" class="btn fw-bold rounded-pill text-white shadow" style="background-color: #2b3a70; padding: 10px 35px; font-size: 14px;">ĐĂNG KÝ NGAY</button>
+                            </div>
+                        </div>
+                    </form>
                 </div>
-                <div class="col-lg-4">
-                    <div class="p-4 h-100 d-flex flex-column justify-content-center gap-3" style="background-color: #4dc4e6; border-radius: 20px;">
-                        <a href="#" id="link_messenger" target="_blank" class="btn text-white fw-bold rounded-pill d-flex justify-content-between align-items-center" style="background-color: #2b3a70; padding: 15px 25px; text-decoration: none;">
-                            <span>NHẮN TIN NHANH</span> <i class="bi bi-messenger fs-4"></i>
-                        </a>
-                        <a href="tel:02873083333" id="link_phone" class="btn text-white fw-bold rounded-pill d-flex justify-content-between align-items-center" style="background-color: #e31837; padding: 15px 25px; text-decoration: none;">
-                            <span id="display_phone">028 7308 3333 (Phím 0)</span> <i class="bi bi-telephone-fill fs-4"></i>
-                        </a>
-                    </div>
-                </div>
+
             </div>
         </div>
     </section>
@@ -299,7 +290,7 @@
 
     <div class="modal fade" id="detailModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
-            <div class="modal-content" style="border-radius: 20px; border: none; box-shadow: 0 20px 50px rgba(0,0,0,0.3);">
+            <div class="modal-content" style="border-radius: 20px; border: none; box-shadow: none; border: 1px solid #eeeeee;">
                 <div class="modal-header bg-light" style="border-radius: 20px 20px 0 0; border-bottom: 2px solid #e0e5ec;">
                     <h5 class="modal-title fw-bold text-primary"><i class="bi bi-info-circle-fill"></i> Thông tin chi tiết</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
