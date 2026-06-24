@@ -1,289 +1,302 @@
-    if ('scrollRestoration' in history) { history.scrollRestoration = 'manual'; }
-    window.scrollTo(0, 0);
-    window.addEventListener('beforeunload', function () { window.scrollTo(0, 0); });
+if ('scrollRestoration' in history) { history.scrollRestoration = 'manual'; }
+window.scrollTo(0, 0);
+window.addEventListener('beforeunload', function () { window.scrollTo(0, 0); });
 
-    // [NÂNG CẤP MƯỢT] Thêm easing hiện đại (ease-out-cubic) và tăng nhẹ duration để chuyển động có chiều sâu hơn
-    AOS.init({ duration: 1000, easing: 'ease-out-cubic', once: false, mirror: true, offset: 50 });
+// [NÂNG CẤP MƯỢT] Thêm easing hiện đại (ease-out-cubic) và tăng nhẹ duration để chuyển động có chiều sâu hơn
+AOS.init({ duration: 1000, easing: 'ease-out-cubic', once: false, mirror: true, offset: 50 });
 
-    // --- BẮT ĐẦU CODE SỬA LỖI CLICK MENU ÉP CHẠY LẠI ANIMATION ---
-    // --- BẮT ĐẦU CODE XỬ LÝ CLICK MENU & ĐIỂM NEO (CUỘN CHÍNH XÁC + HIỆU ỨNG) ---
-    document.addEventListener('click', function(e) {
-        const link = e.target.closest('a');
-        
-        // Kiểm tra xem có phải là thẻ link chứa điểm neo (#) không
-        if (link && link.getAttribute('href') && link.getAttribute('href').startsWith('#')) {
-            const targetId = link.getAttribute('href').substring(1);
-            if(targetId) {
-                const targetEl = document.getElementById(targetId);
-                if (targetEl) {
-                    // TẮT HÀNH VI NHẢY CÓC MẶC ĐỊNH CỦA TRÌNH DUYỆT Nếu click vào thẻ link thông thường
-                    if (link.getAttribute('href') !== 'javascript:void(0)') {
-                        e.preventDefault(); 
+// --- BẮT ĐẦU CODE SỬA LỖI CLICK MENU ÉP CHẠY LẠI ANIMATION ---
+document.addEventListener('click', function(e) {
+    const link = e.target.closest('a');
+    
+    if (link && link.getAttribute('href') && link.getAttribute('href').startsWith('#')) {
+        const targetId = link.getAttribute('href').substring(1);
+        if(targetId) {
+            const targetEl = document.getElementById(targetId);
+            if (targetEl) {
+                if (link.getAttribute('href') !== 'javascript:void(0)') {
+                    e.preventDefault(); 
+                    const headerEl = document.querySelector('.main-header');
+                    const headerHeight = headerEl ? headerEl.offsetHeight : 80;
+                    const extraOffset = 100;
+                    const elementPosition = targetEl.getBoundingClientRect().top + window.scrollY;
+                    const finalScrollPosition = elementPosition - headerHeight - extraOffset;
 
-                        // 1. Tính toán vị trí cuộn chính xác
-                        const headerEl = document.querySelector('.main-header');
-                        const headerHeight = headerEl ? headerEl.offsetHeight : 80; // Lấy chiều cao thực tế của header
-                        const extraOffset = 100; // Trừ hao thêm 30px để cách mép trên cho đẹp, không bị sát rạt
-                        const elementPosition = targetEl.getBoundingClientRect().top + window.scrollY; // Tọa độ tuyệt đối của khối
-                        
-                        const finalScrollPosition = elementPosition - headerHeight - extraOffset;
+                    window.scrollTo({
+                        top: finalScrollPosition,
+                        behavior: 'smooth'
+                    });
 
-                        // 2. Lệnh cho trình duyệt cuộn mượt mà đến đúng tọa độ đã tính
-                        window.scrollTo({
-                            top: finalScrollPosition,
-                            behavior: 'smooth'
-                        });
-
-                        // 3. Xử lý hiệu ứng AOS (Animation) chạy lại mượt mà
-                        if (targetEl.hasAttribute('data-aos')) {
-                            targetEl.classList.remove('aos-animate');
-                            requestAnimationFrame(() => {
-                                setTimeout(() => requestAnimationFrame(() => targetEl.classList.add('aos-animate')), 50);
-                            });
-                        }
-                        
-                        const aosChildren = targetEl.querySelectorAll('[data-aos]');
-                        aosChildren.forEach((child, index) => {
-                            child.classList.remove('aos-animate');
-                            requestAnimationFrame(() => {
-                                setTimeout(() => requestAnimationFrame(() => child.classList.add('aos-animate')), 100 + (index * 30));
-                            });
+                    if (targetEl.hasAttribute('data-aos')) {
+                        targetEl.classList.remove('aos-animate');
+                        requestAnimationFrame(() => {
+                            setTimeout(() => requestAnimationFrame(() => targetEl.classList.add('aos-animate')), 50);
                         });
                     }
+                    
+                    const aosChildren = targetEl.querySelectorAll('[data-aos]');
+                    aosChildren.forEach((child, index) => {
+                        child.classList.remove('aos-animate');
+                        requestAnimationFrame(() => {
+                            setTimeout(() => requestAnimationFrame(() => child.classList.add('aos-animate')), 100 + (index * 30));
+                        });
+                    });
                 }
             }
         }
-    });
-    // --- KẾT THÚC CODE XỬ LÝ ĐIỂM NEO ---
-    // --- KẾT THÚC CODE SỬA LỖI ---
+    }
+});
+// --- KẾT THÚC CODE XỬ LÝ ĐIỂM NEO ---
 
-    const backToTopBtn = document.getElementById("backToTopBtn");
-    // [NÂNG CẤP MƯỢT] Thêm cờ isScrolling và passive: true để tối ưu hiệu suất cuộn trang
-    let isScrolling = false;
-    window.addEventListener("scroll", () => { 
-        if (!isScrolling) {
-            window.requestAnimationFrame(() => {
-                if (window.scrollY > 400) { backToTopBtn.style.display = "flex"; } else { backToTopBtn.style.display = "none"; } 
-                isScrolling = false;
-            });
-            isScrolling = true;
-        }
-    }, { passive: true });
-
-    backToTopBtn.addEventListener("click", () => { window.scrollTo({ top: 0, behavior: "smooth" }); });
-
-    window.addEventListener('load', () => { 
-        setTimeout(() => { 
-            const loader = document.getElementById('page-loader'); 
-            if (loader) { 
-                loader.style.transition = 'opacity 0.6s cubic-bezier(0.25, 0.8, 0.25, 1)';
-                loader.style.opacity = '0'; 
-                setTimeout(() => loader.style.display = 'none', 600); 
-            } 
-        }, 1500); 
-    });
-
-    window.showDetailModal = (encodedContent) => {
-        const modalBody = document.getElementById('detailModalBody');
-        // Reset hiệu ứng: loại bỏ transform nhảy nhót để phù hợp với hiệu ứng mở mật thư của CSS
-        modalBody.style.transition = 'none';
-        modalBody.style.opacity = '0';
-        modalBody.style.transform = 'none'; 
-        modalBody.innerHTML = decodeURIComponent(encodedContent);
-        
-        let detailModal = bootstrap.Modal.getOrCreateInstance(document.getElementById('detailModal'));
-        detailModal.show();
-        
-        requestAnimationFrame(() => {
-            requestAnimationFrame(() => {
-                // Cho text mờ dần hiện lên từ từ (delay 0.5s cho khớp nhịp mở của mật thư CSS)
-                modalBody.style.transition = 'opacity 1.2s ease-out 0.5s';
-                modalBody.style.opacity = '1';
-            });
+const backToTopBtn = document.getElementById("backToTopBtn");
+let isScrolling = false;
+window.addEventListener("scroll", () => { 
+    if (!isScrolling) {
+        window.requestAnimationFrame(() => {
+            if (window.scrollY > 400) { backToTopBtn.style.display = "flex"; } else { backToTopBtn.style.display = "none"; } 
+            isScrolling = false;
         });
-    };
+        isScrolling = true;
+    }
+}, { passive: true });
 
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-    import { getDatabase, ref, push, onValue, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
+backToTopBtn.addEventListener("click", () => { window.scrollTo({ top: 0, behavior: "smooth" }); });
 
-    const firebaseConfig = {
-        apiKey: "AIzaSyDSY3y-AWYYg5QM3p2mZ94MAuhBqpHKY6M",
-        authDomain: "web-nnll.firebaseapp.com",
-        databaseURL: "https://web-nnll-default-rtdb.firebaseio.com",
-        projectId: "web-nnll",
-        storageBucket: "web-nnll.firebasestorage.app",
-        messagingSenderId: "760353962724",
-        appId: "1:760353962724:web:172850525b0daf94f1caf1",
-        measurementId: "G-09MJMYGH4J"
-    }; 
-    const app = initializeApp(firebaseConfig); 
-    const db = getDatabase(app);
+window.addEventListener('load', () => { 
+    setTimeout(() => { 
+        const loader = document.getElementById('page-loader'); 
+        if (loader) { 
+            loader.style.transition = 'opacity 0.6s cubic-bezier(0.25, 0.8, 0.25, 1)';
+            loader.style.opacity = '0'; 
+            setTimeout(() => loader.style.display = 'none', 600); 
+        } 
+    }, 1500); 
+});
 
-    // MẢNG LƯU TRỮ SWIPER ĐỂ TIÊU DIỆT SẠCH SẼ KHI DỮ LIỆU ĐỔI (CHỐNG KẸT/ĐỨNG YÊN)
-    window.cmsSwipers = window.cmsSwipers || [];
+window.showDetailModal = (encodedContent) => {
+    const modalBody = document.getElementById('detailModalBody');
+    modalBody.style.transition = 'none';
+    modalBody.style.opacity = '0';
+    modalBody.style.transform = 'none'; 
+    modalBody.innerHTML = decodeURIComponent(encodedContent);
+    
+    let detailModal = bootstrap.Modal.getOrCreateInstance(document.getElementById('detailModal'));
+    detailModal.show();
+    
+    requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+            modalBody.style.transition = 'opacity 1.2s ease-out 0.5s';
+            modalBody.style.opacity = '1';
+        });
+    });
+};
 
-    onValue(ref(db, 'pageContent'), (snapshot) => {
-        if(snapshot.exists()){
-            const data = snapshot.val();
-            
-            // 1. DỌN SẠCH CÁC SWIPER CŨ ĐANG CHẠY NGẦM ĐỂ TRÁNH XUNG ĐỘT
-            if (window.cmsSwipers.length > 0) {
-                window.cmsSwipers.forEach(s => {
-                    try { s.destroy(true, true); } catch(e) {}
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+import { getDatabase, ref, push, onValue, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
+
+const firebaseConfig = {
+    apiKey: "AIzaSyDSY3y-AWYYg5QM3p2mZ94MAuhBqpHKY6M",
+    authDomain: "web-nnll.firebaseapp.com",
+    databaseURL: "https://web-nnll-default-rtdb.firebaseio.com",
+    projectId: "web-nnll",
+    storageBucket: "web-nnll.firebasestorage.app",
+    messagingSenderId: "760353962724",
+    appId: "1:760353962724:web:172850525b0daf94f1caf1",
+    measurementId: "G-09MJMYGH4J"
+}; 
+const app = initializeApp(firebaseConfig); 
+const db = getDatabase(app);
+
+window.cmsSwipers = window.cmsSwipers || [];
+
+onValue(ref(db, 'pageContent'), (snapshot) => {
+    if(snapshot.exists()){
+        const data = snapshot.val();
+        
+        if (window.cmsSwipers.length > 0) {
+            window.cmsSwipers.forEach(s => {
+                try { s.destroy(true, true); } catch(e) {}
+            });
+            window.cmsSwipers = [];
+        }
+        
+        try {
+            if (data.header_menu) {
+                let dNav = ''; let mNav = '';
+                data.header_menu.forEach(m => {
+                    if (m.type === 'phone') {
+                        let phoneNum = m.value.replace(/[^0-9]/g, '');
+                        dNav += `<a href="tel:${phoneNum}" class="btn-phone-menu"><i class="bi bi-telephone-fill"></i> ${m.name}</a>`;
+                        mNav += `<a href="tel:${phoneNum}" class="mobile-menu-link phone-link"><i class="bi bi-telephone-fill"></i> ${m.name}</a>`;
+                    } else {
+                        dNav += `<a href="${m.value}">${m.name}</a>`;
+                        mNav += `<a href="${m.value}" class="mobile-menu-link" onclick="bootstrap.Offcanvas.getInstance(document.getElementById('mobileMenu')).hide();">${m.name}</a>`;
+                    }
                 });
-                window.cmsSwipers = [];
+                if(document.getElementById('desktop_nav')) document.getElementById('desktop_nav').innerHTML = dNav;
+                if(document.getElementById('mobile_nav_render')) document.getElementById('mobile_nav_render').innerHTML = mNav;
+            }
+
+            if (data.form_config) {
+                const config = data.form_config;
+                const renderOptions = (elId, list, defaultText) => {
+                    const el = document.getElementById(elId);
+                    if (!el) return;
+                    let html = `<option value="" disabled selected>${defaultText}</option>`;
+                    (list || []).forEach(item => { html += `<option value="${item}"> ${item}</option>`; });
+                    el.innerHTML = html;
+                };
+                renderOptions('p_age', config.ages, "Chọn độ tuổi"); renderOptions('p_study', config.studyModes, "Chọn hình thức học"); renderOptions('p_course', config.courses, "Khóa học đăng ký"); renderOptions('p_city', config.cities, "Tỉnh/ Thành phố");
+                renderOptions('f_study', config.studyModes, "Hình thức học"); renderOptions('f_city', config.cities, "Tỉnh/ Thành phố"); renderOptions('f_age', config.ages, "Độ tuổi *"); renderOptions('f_course', config.courses, "Khóa học đăng ký *");
+            }
+
+            if (data.contact_data) {
+                const cd = data.contact_data;
+                const updateIfExist = (id, val) => { let el = document.getElementById(id); if (el) el.innerText = val || ''; };
+                
+                updateIfExist('client_contact_title', cd.title || 'Đăng Ký Tư Vấn');
+                updateIfExist('client_contact_subtitle', cd.subtitle || 'Nhận Ngay 1 Tháng Học Miễn Phí');
+                
+                let bgEl = document.getElementById('client_contact_bg');
+                if (bgEl && cd.bgImg) { bgEl.src = cd.bgImg; }
+                
+                let oldStyle = document.getElementById('dynamic-contact-style-index');
+                if (oldStyle) oldStyle.remove();
+            }
+
+            if (data.visibility) {
+                const applyVis = (elId, key) => { const el = document.getElementById(elId); if (el) el.style.display = data.visibility[key] ? '' : 'none'; };
+                applyVis('wrap_header', 'header'); applyVis('wrap_hero', 'header'); applyVis('wrap_news', 'news'); applyVis('wrap_about', 'about'); applyVis('wrap_activity', 'activity'); applyVis('wrap_intro', 'intro'); applyVis('wrap_global_tech', 'global_tech'); applyVis('wrap_global_english', 'global_english'); applyVis('wrap_global_teacher', 'global_teacher'); applyVis('wrap_contact_form', 'contact_form'); applyVis('wrap_footer', 'footer');
             }
             
-            try {
-                if (data.header_menu) {
-                    let dNav = ''; let mNav = '';
-                    data.header_menu.forEach(m => {
-                        if (m.type === 'phone') {
-                            let phoneNum = m.value.replace(/[^0-9]/g, '');
-                            dNav += `<a href="tel:${phoneNum}" class="btn-phone-menu"><i class="bi bi-telephone-fill"></i> ${m.name}</a>`;
-                            mNav += `<a href="tel:${phoneNum}" class="mobile-menu-link phone-link"><i class="bi bi-telephone-fill"></i> ${m.name}</a>`;
-                        } else {
-                            dNav += `<a href="${m.value}">${m.name}</a>`;
-                            mNav += `<a href="${m.value}" class="mobile-menu-link" onclick="bootstrap.Offcanvas.getInstance(document.getElementById('mobileMenu')).hide();">${m.name}</a>`;
-                        }
+            let fetchedBgs = [];
+            if(data.hero_images && data.hero_images.length > 0) {
+                 fetchedBgs = data.hero_images;
+            } else {
+                 if(data.hero_bg_1 && data.hero_bg_1.trim() !== "") fetchedBgs.push(data.hero_bg_1); 
+                 if(data.hero_bg_2 && data.hero_bg_2.trim() !== "") fetchedBgs.push(data.hero_bg_2); 
+                 if(data.hero_bg_3 && data.hero_bg_3.trim() !== "") fetchedBgs.push(data.hero_bg_3);
+            }
+            
+            const heroRender = document.getElementById('hero_render');
+            let heroSection = document.getElementById('wrap_hero');
+            if(fetchedBgs.length === 0) { 
+                if(heroSection) heroSection.style.display = 'none'; 
+            } else { 
+                if(heroSection) heroSection.style.display = 'block'; 
+                if(heroRender) {
+                    let hHtml = '';
+                    fetchedBgs.forEach(bg => {
+                        hHtml += `<div class="swiper-slide" style="background-image: url('${bg}'); background-size: cover; background-position: center; background-repeat: no-repeat; width: 100%; height: 100%;"></div>`;
                     });
-                    if(document.getElementById('desktop_nav')) document.getElementById('desktop_nav').innerHTML = dNav;
-                    if(document.getElementById('mobile_nav_render')) document.getElementById('mobile_nav_render').innerHTML = mNav;
+                    heroRender.innerHTML = hHtml;
                 }
+            }
+            
+            const updateHTML = (id, value) => { if(value && document.getElementById(id)) document.getElementById(id).innerHTML = value; };
+            const updateIMG = (id, value) => { if(value && document.getElementById(id)) document.getElementById(id).src = value; };
 
-                if (data.form_config) {
-                    const config = data.form_config;
-                    const renderOptions = (elId, list, defaultText) => {
-                        const el = document.getElementById(elId);
-                        if (!el) return;
-                        let html = `<option value="" disabled selected>${defaultText}</option>`;
-                        (list || []).forEach(item => { html += `<option value="${item}"> ${item}</option>`; });
-                        el.innerHTML = html;
-                    };
-                    renderOptions('p_age', config.ages, "Chọn độ tuổi"); renderOptions('p_study', config.studyModes, "Chọn hình thức học"); renderOptions('p_course', config.courses, "Khóa học đăng ký"); renderOptions('p_city', config.cities, "Tỉnh/ Thành phố");
-                    renderOptions('f_study', config.studyModes, "Hình thức học"); renderOptions('f_city', config.cities, "Tỉnh/ Thành phố"); renderOptions('f_age', config.ages, "Độ tuổi *"); renderOptions('f_course', config.courses, "Khóa học đăng ký *");
-                }
+            updateIMG('cms_logo', data.logo); updateIMG('loader_img', data.logo); updateHTML('cms_site_title', data.site_title); updateHTML('cms_sec1_title', data.sec1_title); updateHTML('cms_sec1_desc', data.sec1_desc);
 
-                if (data.contact_data) {
-                    // LOGIC MỚI: BẮT DỮ LIỆU ĐỘNG TỪ ADMIN (TIÊU ĐỀ, TIÊU ĐỀ PHỤ, ẢNH NỀN)
-                    const cd = data.contact_data;
-                    const updateIfExist = (id, val) => { let el = document.getElementById(id); if (el) el.innerText = val || ''; };
-                    
-                    updateIfExist('client_contact_title', cd.title || 'Đăng Ký Tư Vấn');
-                    updateIfExist('client_contact_subtitle', cd.subtitle || 'Nhận Ngay 1 Tháng Học Miễn Phí');
-                    
-                    let bgEl = document.getElementById('client_contact_bg');
-                    if (bgEl && cd.bgImg) {
-                        bgEl.src = cd.bgImg;
+            if (data.news_data && document.getElementById('news_render')) {
+                document.getElementById('cms_news_title').innerText = data.news_data.title || "LLC NEWS";
+                let nHTML = '';
+                if (data.news_data.slides) { data.news_data.slides.forEach(s => { if(s) nHTML += `<div class="swiper-slide"><img src="${s.img || ''}" class="news-img-card" alt="News Image"></div>`; }); }
+                document.getElementById('news_render').innerHTML = nHTML;
+            }
+
+            if (data.about_data && document.getElementById('wrap_about')) {
+                updateIMG('p_about_img', data.about_data.img); updateHTML('p_about_title', data.about_data.title); updateHTML('p_about_desc', data.about_data.desc);
+                const abTitle = document.getElementById('p_about_title'); if (abTitle) abTitle.style.color = data.about_data.titleColor || '#112255';
+                const abDesc = document.getElementById('p_about_desc'); if (abDesc) abDesc.style.color = data.about_data.descColor || '#475569';
+                const abBg = document.getElementById('cms_about_bg'); if (abBg) abBg.style.backgroundColor = data.about_data.bgColor || 'transparent';
+            }
+
+            let wrapActIndex = document.getElementById('wrap_activity');
+            if (data.activity_data && data.activity_data.isDeleted) {
+                if (wrapActIndex) wrapActIndex.style.display = 'none';
+            } else if (data.activity_data && document.getElementById('activity_render')) {
+                if (wrapActIndex) wrapActIndex.style.display = 'block'; document.getElementById('cms_activity_title').innerText = data.activity_data.title || "HÌNH ẢNH HOẠT ĐỘNG";
+                let actHTML = ''; if(data.activity_data.slides) { data.activity_data.slides.forEach(s => { if(s) actHTML += `<div class="swiper-slide"><div class="w-100"><img src="${s.img || ''}" class="activity-slide-img"><p class="activity-slide-text">${s.text || ''}</p></div></div>`; }); } document.getElementById('activity_render').innerHTML = actHTML;
+            }
+
+            const techContainer = document.getElementById('tech_cards_container');
+            if(data.tech_cards && techContainer) {
+                techContainer.innerHTML = '';
+                data.tech_cards.forEach((card, index) => { 
+                    if(card) {
+                        let btnDetail = card.has_detail ? `<div class="px-4 pb-3 mt-auto"><button type="button" class="btn w-100 btn-detail" style="background-color: ${card.detail_bg||'#3866f0'}; color: ${card.detail_color||'#ffffff'}; font-size: ${card.detail_size||'14'}px; font-family: ${card.detail_font||'Inter'}, sans-serif;" data-content="${encodeURIComponent(card.detail_content || 'Nội dung chi tiết đang cập nhật...')}" onclick="window.showDetailModal(this.getAttribute('data-content'))">${card.detail_text||'Xem chi tiết'}</button></div>` : '';
+                        techContainer.innerHTML += `<div class="swiper-slide"><div class="course-card"><div style="background-color: ${card.color}; height: 5px; width: 100%; position: absolute; top: 0; left: 0; z-index: 10;"></div><img src="${card.img}" class="course-card-img"><div class="icon-box" style="color: ${card.color}; border: 2px solid ${card.color}30;"><i class="bi ${card.icon}"></i></div><h3 class="course-title">${card.title}</h3><p class="course-desc">${card.desc}</p><div class="px-4 pb-2 mt-auto"><button type="button" class="btn w-100 fw-bold" style="background-color: #f15a3a; color: white; border-radius: 50px; padding: 10px;" data-bs-toggle="modal" data-bs-target="#registrationModal">TƯ VẤN NGAY <i class="bi bi-telephone-fill" style="background: white; color: #f15a3a; padding: 2px 6px; border-radius: 50%; margin-left: 5px;"></i></button></div>${btnDetail}</div></div>`; 
                     }
-                    
-                    // Dọn dẹp mã CSS style cũ (nếu có lưu cache trong trình duyệt)
-                    let oldStyle = document.getElementById('dynamic-contact-style-index');
-                    if (oldStyle) oldStyle.remove();
-                }
+                });
+            }
 
-                if (data.visibility) {
-                    const applyVis = (elId, key) => { const el = document.getElementById(elId); if (el) el.style.display = data.visibility[key] ? '' : 'none'; };
-                    applyVis('wrap_header', 'header'); applyVis('wrap_hero', 'header'); applyVis('wrap_news', 'news'); applyVis('wrap_about', 'about'); applyVis('wrap_activity', 'activity'); applyVis('wrap_intro', 'intro'); applyVis('wrap_global_tech', 'global_tech'); applyVis('wrap_global_english', 'global_english'); applyVis('wrap_global_teacher', 'global_teacher'); applyVis('wrap_contact_form', 'contact_form'); applyVis('wrap_footer', 'footer');
-                }
-                
-                // --- LOGIC ẢNH BÌA HERO ---
-                let fetchedBgs = [];
-                if(data.hero_images && data.hero_images.length > 0) {
-                    fetchedBgs = data.hero_images;
-                } else {
-                    if(data.hero_bg_1 && data.hero_bg_1.trim() !== "") fetchedBgs.push(data.hero_bg_1); 
-                    if(data.hero_bg_2 && data.hero_bg_2.trim() !== "") fetchedBgs.push(data.hero_bg_2); 
-                    if(data.hero_bg_3 && data.hero_bg_3.trim() !== "") fetchedBgs.push(data.hero_bg_3);
-                }
-                
-                const heroRender = document.getElementById('hero_render');
-                let heroSection = document.getElementById('wrap_hero');
-                if(fetchedBgs.length === 0) { 
-                    if(heroSection) heroSection.style.display = 'none'; 
-                } else { 
-                    if(heroSection) heroSection.style.display = 'block'; 
-                    if(heroRender) {
-                        let hHtml = '';
-                        fetchedBgs.forEach(bg => {
-                            hHtml += `<div class="swiper-slide" style="background-image: url('${bg}'); background-size: cover; background-position: center; background-repeat: no-repeat; width: 100%; height: 100%;"></div>`;
-                        });
-                        heroRender.innerHTML = hHtml;
+            const englishContainer = document.getElementById('english_cards_container'); const englishSection = document.getElementById('wrap_global_english');
+            if(data.english_bg_color && englishSection) englishSection.style.backgroundColor = data.english_bg_color;
+            if(data.english_cards && englishContainer) {
+                englishContainer.innerHTML = '';
+                data.english_cards.forEach((card, index) => { 
+                    if(card) {
+                        let btnDetail = card.has_detail ? `<button type="button" class="btn w-100 mt-2 btn-detail" style="background-color: ${card.detail_bg||'#3866f0'}; color: ${card.detail_color||'#ffffff'}; font-size: ${card.detail_size||'14'}px; font-family: ${card.detail_font||'Inter'}, sans-serif;" data-content="${encodeURIComponent(card.detail_content || 'Nội dung chi tiết đang cập nhật...')}" onclick="window.showDetailModal(this.getAttribute('data-content'))">${card.detail_text||'Xem chi tiết'}</button>` : '';
+                        englishContainer.innerHTML += `<div class="swiper-slide"><div class="ep-card" style="background-color: ${card.bg_color || '#ffffff'};"><div class="ep-header"><h3 class="ep-title" style="color: ${card.text_color || '#112255'};">${card.title}</h3><div class="ep-age-badge" style="background-color: rgb(255, 75, 15);"><span style="color:#ffffff!important;">Từ</span><strong style="color:#ffffff!important;">${card.age}</strong><span style="color:#ffffff!important;">tuổi</span></div></div><img src="${card.img}" class="ep-img"><p class="ep-desc" style="color: ${card.text_color || '#475569'};">${card.desc}</p><div class="mt-auto"><button type="button" class="ep-btn" style="background-color: #f15a3a; color: #fff;" data-bs-toggle="modal" data-bs-target="#registrationModal">TƯ VẤN NGAY <i class="bi bi-telephone-fill" style="color: #f15a3a; background-color: #fff;"></i></button>${btnDetail}</div></div></div>`; 
                     }
-                }
-                
-                const updateHTML = (id, value) => { if(value && document.getElementById(id)) document.getElementById(id).innerHTML = value; };
-                const updateIMG = (id, value) => { if(value && document.getElementById(id)) document.getElementById(id).src = value; };
+                });
+            }
 
-                updateIMG('cms_logo', data.logo); updateIMG('loader_img', data.logo); updateHTML('cms_site_title', data.site_title); updateHTML('cms_sec1_title', data.sec1_title); updateHTML('cms_sec1_desc', data.sec1_desc);
+            if(data.teacher_config && document.getElementById('cms_teacher_title')) { const tc = data.teacher_config; document.getElementById('cms_teacher_title').innerHTML = `<i class="bi ${tc.icon}"></i> ${tc.title}`; document.getElementById('cms_teacher_title').style.color = tc.color; }
+            if(data.teacher_cards && document.getElementById('global_teacher_render')) {
+                let tHTML = '';
+                data.teacher_cards.forEach((c) => {
+                    if(c) {
+                        let badgeHTML = c.hideExperience ? '' : `<div class="teacher-badge"><span>+${c.experience}</span><small>năm<br>kinh nghiệm</small></div>`;
+                        tHTML += `<div class="swiper-slide"><div class="teacher-card" style="border-color: ${c.bgColor||'#00d5ff'} !important;">${badgeHTML}<img src="${c.img}" class="teacher-img"><div class="teacher-info" style="background-color: ${c.bgColor||'#00d5ff'};"><div class="teacher-role" style="color: ${c.roleColor||'#112255'};">${c.role}</div><h4 class="teacher-name" style="color: ${c.nameColor||'#112255'};">${c.name}</h4></div></div></div>`;
+                    }
+                });
+                document.getElementById('global_teacher_render').innerHTML = tHTML;
+            }
 
-                if (data.news_data && document.getElementById('news_render')) {
-                    document.getElementById('cms_news_title').innerText = data.news_data.title || "LLC NEWS";
-                    let nHTML = '';
-                    if (data.news_data.slides) { data.news_data.slides.forEach(s => { if(s) nHTML += `<div class="swiper-slide"><img src="${s.img || ''}" class="news-img-card" alt="News Image"></div>`; }); }
-                    document.getElementById('news_render').innerHTML = nHTML;
-                }
+            let renderTop = '', renderMid1 = '', renderMid2 = '', renderBottom = '';
+            
+            // --- GỘP KHỐI KHÓA HỌC THÀNH TAB CHUẨN GIAO DIỆN MỚI ---
+            if (data.custom_blocks) {
+                let tabNavItems = '';
+                let tabPaneItems = '';
+                let tabIndex = 0;
+                let hasTabbedBlocks = false;
 
-                if (data.about_data && document.getElementById('wrap_about')) {
-                    updateIMG('p_about_img', data.about_data.img); updateHTML('p_about_title', data.about_data.title); updateHTML('p_about_desc', data.about_data.desc);
-                    const abTitle = document.getElementById('p_about_title'); if (abTitle) abTitle.style.color = data.about_data.titleColor || '#112255';
-                    const abDesc = document.getElementById('p_about_desc'); if (abDesc) abDesc.style.color = data.about_data.descColor || '#475569';
-                    const abBg = document.getElementById('cms_about_bg'); if (abBg) abBg.style.backgroundColor = data.about_data.bgColor || 'transparent';
-                }
+                data.custom_blocks.forEach((block, bIndex) => {
+                    if (block && !block.isHidden) {
+                        let dbHTML = '';
 
-                let wrapActIndex = document.getElementById('wrap_activity');
-                if (data.activity_data && data.activity_data.isDeleted) {
-                    if (wrapActIndex) wrapActIndex.style.display = 'none';
-                } else if (data.activity_data && document.getElementById('activity_render')) {
-                    if (wrapActIndex) wrapActIndex.style.display = 'block'; document.getElementById('cms_activity_title').innerText = data.activity_data.title || "HÌNH ẢNH HOẠT ĐỘNG";
-                    let actHTML = ''; if(data.activity_data.slides) { data.activity_data.slides.forEach(s => { if(s) actHTML += `<div class="swiper-slide"><div class="w-100"><img src="${s.img || ''}" class="activity-slide-img"><p class="activity-slide-text">${s.text || ''}</p></div></div>`; }); } document.getElementById('activity_render').innerHTML = actHTML;
-                }
+                        // NẾU LÀ KHỐI KHÓA HỌC (TECH, ENGLISH), TA ĐƯA VÀO TAB
+                        if (block.type === 'tech' || block.type === 'english') {
+                            hasTabbedBlocks = true;
+                            let isActive = tabIndex === 0 ? 'active' : '';
+                            let isShow = tabIndex === 0 ? 'show active' : '';
+                            let tabId = block.slug || `tab-${block.id || bIndex}`;
+                            
+                            // Nút chuyển Tab màu sắc dựa theo block (Mặc định Cam cho Tech, Xanh đen cho English)
+                            let btnColor = block.color || (block.type === 'tech' ? '#f15a3a' : '#112255');
+                            let bIcon = block.icon || (block.type === 'tech' ? 'bi-gear' : 'bi-book');
+                            
+                            // Inline style xử lý cho tab (active và inactive) chuẩn như ảnh
+                            let activeStyle = `background-color: ${btnColor}; color: #fff; border: 1px solid ${btnColor};`;
+                            let inactiveStyle = `background-color: transparent; color: #112255; border: 1px solid #112255;`;
+                            let currentStyle = isActive ? activeStyle : inactiveStyle;
 
-                const techContainer = document.getElementById('tech_cards_container');
-                if(data.tech_cards && techContainer) {
-                    techContainer.innerHTML = '';
-                    data.tech_cards.forEach((card, index) => { 
-                        if(card) {
-                            let btnDetail = card.has_detail ? `<div class="px-4 pb-3 mt-auto"><button type="button" class="btn w-100 btn-detail" style="background-color: ${card.detail_bg||'#3866f0'}; color: ${card.detail_color||'#ffffff'}; font-size: ${card.detail_size||'14'}px; font-family: ${card.detail_font||'Inter'}, sans-serif;" data-content="${encodeURIComponent(card.detail_content || 'Nội dung chi tiết đang cập nhật...')}" onclick="window.showDetailModal(this.getAttribute('data-content'))">${card.detail_text||'Xem chi tiết'}</button></div>` : '';
-                            techContainer.innerHTML += `<div class="swiper-slide"><div class="course-card"><div style="background-color: ${card.color}; height: 5px; width: 100%; position: absolute; top: 0; left: 0; z-index: 10;"></div><img src="${card.img}" class="course-card-img"><div class="icon-box" style="color: ${card.color}; border: 2px solid ${card.color}30;"><i class="bi ${card.icon}"></i></div><h3 class="course-title">${card.title}</h3><p class="course-desc">${card.desc}</p><div class="px-4 pb-2 mt-auto"><button type="button" class="btn w-100 fw-bold" style="background-color: #f15a3a; color: white; border-radius: 50px; padding: 10px;" data-bs-toggle="modal" data-bs-target="#registrationModal">TƯ VẤN NGAY <i class="bi bi-telephone-fill" style="background: white; color: #f15a3a; padding: 2px 6px; border-radius: 50%; margin-left: 5px;"></i></button></div>${btnDetail}</div></div>`; 
-                        }
-                    });
-                }
+                            tabNavItems += `
+                                <li class="nav-item mx-2 mb-2" role="presentation">
+                                    <button class="nav-link custom-tab-btn ${isActive}" 
+                                            id="pills-${tabId}-tab" data-bs-toggle="pill" data-bs-target="#pills-${tabId}" type="button" role="tab" 
+                                            aria-controls="pills-${tabId}" aria-selected="${isActive ? 'true' : 'false'}" 
+                                            data-active-bg="${btnColor}" 
+                                            style="border-radius: 50px; padding: 10px 25px; font-weight: 600; font-size: 15px; display: flex; align-items: center; gap: 8px; ${currentStyle} transition: all 0.2s ease;">
+                                        <i class="bi ${bIcon}"></i> ${block.title || 'Chương trình'}
+                                    </button>
+                                </li>
+                            `;
 
-                const englishContainer = document.getElementById('english_cards_container'); const englishSection = document.getElementById('wrap_global_english');
-                if(data.english_bg_color && englishSection) englishSection.style.backgroundColor = data.english_bg_color;
-                if(data.english_cards && englishContainer) {
-                    englishContainer.innerHTML = '';
-                    data.english_cards.forEach((card, index) => { 
-                        if(card) {
-                            let btnDetail = card.has_detail ? `<button type="button" class="btn w-100 mt-2 btn-detail" style="background-color: ${card.detail_bg||'#3866f0'}; color: ${card.detail_color||'#ffffff'}; font-size: ${card.detail_size||'14'}px; font-family: ${card.detail_font||'Inter'}, sans-serif;" data-content="${encodeURIComponent(card.detail_content || 'Nội dung chi tiết đang cập nhật...')}" onclick="window.showDetailModal(this.getAttribute('data-content'))">${card.detail_text||'Xem chi tiết'}</button>` : '';
-                            englishContainer.innerHTML += `<div class="swiper-slide"><div class="ep-card" style="background-color: ${card.bg_color || '#ffffff'};"><div class="ep-header"><h3 class="ep-title" style="color: ${card.text_color || '#112255'};">${card.title}</h3><div class="ep-age-badge" style="background-color: rgb(255, 75, 15);"><span style="color:#ffffff!important;">Từ</span><strong style="color:#ffffff!important;">${card.age}</strong><span style="color:#ffffff!important;">tuổi</span></div></div><img src="${card.img}" class="ep-img"><p class="ep-desc" style="color: ${card.text_color || '#475569'};">${card.desc}</p><div class="mt-auto"><button type="button" class="ep-btn" style="background-color: #f15a3a; color: #fff;" data-bs-toggle="modal" data-bs-target="#registrationModal">TƯ VẤN NGAY <i class="bi bi-telephone-fill" style="color: #f15a3a; background-color: #fff;"></i></button>${btnDetail}</div></div></div>`; 
-                        }
-                    });
-                }
-
-                if(data.teacher_config && document.getElementById('cms_teacher_title')) { const tc = data.teacher_config; document.getElementById('cms_teacher_title').innerHTML = `<i class="bi ${tc.icon}"></i> ${tc.title}`; document.getElementById('cms_teacher_title').style.color = tc.color; }
-                if(data.teacher_cards && document.getElementById('global_teacher_render')) {
-                    let tHTML = '';
-                    data.teacher_cards.forEach((c) => {
-                        if(c) {
-                            let badgeHTML = c.hideExperience ? '' : `<div class="teacher-badge"><span>+${c.experience}</span><small>năm<br>kinh nghiệm</small></div>`;
-                            tHTML += `<div class="swiper-slide"><div class="teacher-card" style="border-color: ${c.bgColor||'#00d5ff'} !important;">${badgeHTML}<img src="${c.img}" class="teacher-img"><div class="teacher-info" style="background-color: ${c.bgColor||'#00d5ff'};"><div class="teacher-role" style="color: ${c.roleColor||'#112255'};">${c.role}</div><h4 class="teacher-name" style="color: ${c.nameColor||'#112255'};">${c.name}</h4></div></div></div>`;
-                        }
-                    });
-                    document.getElementById('global_teacher_render').innerHTML = tHTML;
-                }
-
-                let renderTop = '', renderMid1 = '', renderMid2 = '', renderBottom = '';
-                if (data.custom_blocks) {
-                    data.custom_blocks.forEach((block, bIndex) => {
-                        if (block && !block.isHidden) {
-                            let dbHTML = '';
-                            if (block.type === 'text' || !block.type) { 
-                                let bgStyle = block.isTransparent ? 'transparent' : (block.bgColor || '#e0f2fe'); let shadowStyle = block.hasShadow === false ? 'none' : '0 5px 15px rgba(0,0,0,0.05)'; let padStyle = (block.isTransparent && block.hasShadow === false) ? '15px 0' : '30px';
-                                dbHTML = `<div id="${block.slug || 'block-'+block.id}" class="custom-text-box" data-aos="fade-up" style="background-color: ${bgStyle}; color: ${block.textColor}; padding: ${padStyle}; border-radius: 20px; box-shadow: ${shadowStyle}; margin-bottom: 30px;">${block.content}</div>`; 
-                            } 
-                            else if (block.type === 'tech') { 
+                            if (block.type === 'tech') { 
                                 let innerCards = ''; 
                                 if(block.cards) { 
                                     block.cards.forEach((c, i) => { 
@@ -293,13 +306,10 @@
                                         }
                                     }); 
                                 } 
-                                let bColor = block.color || '#f15a3a'; let bIcon = block.icon || 'bi-card-checklist';
-                                
-                                // [ĐÃ SỬA] Nút more: Thẻ a, chữ màu cam, không có nền, chữ viết thường
-                                let btnMore = block.has_more ? `<a href="javascript:void(0)" class="ms-3" style="color: #f15a3a; text-decoration: none; font-size: 15px; font-weight: 600; display: inline-flex; align-items: center; transition: 0.3s;" onmouseover="this.style.opacity='0.7'" onmouseout="this.style.opacity='1'" onclick="let p = document.getElementById('client-more-content-${block.id}'); p.classList.toggle('d-none'); if(p.classList.contains('d-none')){ this.innerHTML = 'more <i class=\\'bi bi-chevron-right ms-1\\'></i>'; } else { this.innerHTML = 'less <i class=\\'bi bi-chevron-up ms-1\\'></i>'; } event.stopPropagation();">more <i class="bi bi-chevron-right ms-1"></i></a>` : '';
+                                let btnMore = block.has_more ? `<a href="javascript:void(0)" class="ms-3" style="color: #f15a3a; text-decoration: none; font-size: 14px; font-weight: 500; display: inline-flex; align-items: center; transition: 0.3s;" onclick="let p = document.getElementById('client-more-content-${block.id}'); p.classList.toggle('d-none'); if(p.classList.contains('d-none')){ this.innerHTML = 'more <i class=\\'bi bi-chevron-right ms-1\\'></i>'; } else { this.innerHTML = 'less <i class=\\'bi bi-chevron-up ms-1\\'></i>'; } event.stopPropagation();">more <i class="bi bi-chevron-right ms-1"></i></a>` : '';
                                 let moreTextHtml = block.has_more ? `<div id="client-more-content-${block.id}" class="more-block-text d-none mt-3 p-3 bg-light rounded border shadow-sm w-100" style="color: #475569; font-size: 15px; text-align: left; line-height: 1.6; font-weight: 500; font-family: 'Inter', sans-serif;">${block.more_content || ''}</div>` : '';
                                 
-                                dbHTML = `<div id="${block.slug || 'block-'+block.id}" data-aos="fade-up" class="mb-5"><div class="section-heading mb-4 d-flex flex-column align-items-start" style="text-align: left;"><div class="d-flex align-items-center flex-wrap w-100"><h2 style="color: ${bColor}; font-size: 32px; margin-bottom: 0; width: auto !important;"><i class="bi ${bIcon}"></i> ${block.title || 'Khối Thông Tin 1'}</h2>${btnMore}</div>${moreTextHtml}</div><div class="swiper customTechSwiper-${bIndex} techSwiper"><div class="swiper-wrapper">${innerCards}</div><div class="swiper-pagination"></div></div></div>`; 
+                                dbHTML = `<div id="${block.slug || 'block-'+block.id}" class="w-100 py-3"><div class="section-heading mb-4 d-flex flex-column align-items-start" style="text-align: left;"><div class="d-flex align-items-center flex-wrap w-100 pb-2" style="border-bottom: 1px dotted #cbd5e1;"><h2 style="color: ${btnColor}; font-size: 26px; font-weight: 800; margin-bottom: 0; width: auto !important; text-transform: uppercase;"><i class="bi ${bIcon}"></i> ${block.title || 'Khóa Công Nghệ'}</h2>${btnMore}</div>${moreTextHtml}</div><div class="swiper customTechSwiper-${bIndex} techSwiper pt-2"><div class="swiper-wrapper">${innerCards}</div><div class="swiper-pagination"></div></div></div>`; 
                             }
                             else if (block.type === 'english') { 
                                 let innerCards = ''; 
@@ -311,14 +321,23 @@
                                         }
                                     }); 
                                 } 
-                                let bColor = block.color || '#112255'; let bIcon = block.icon || 'bi-book'; let bBg = block.bgColor || '#00d5ff';
-                                
-                                // [ĐÃ SỬA] Nút more: Thẻ a, chữ màu cam, không có nền, chữ viết thường
-                                let btnMore = block.has_more ? `<a href="javascript:void(0)" class="ms-3" style="color: #f15a3a; text-decoration: none; font-size: 15px; font-weight: 600; display: inline-flex; align-items: center; transition: 0.3s;" onmouseover="this.style.opacity='0.7'" onmouseout="this.style.opacity='1'" onclick="let p = document.getElementById('client-more-content-${block.id}'); p.classList.toggle('d-none'); if(p.classList.contains('d-none')){ this.innerHTML = 'more <i class=\\'bi bi-chevron-right ms-1\\'></i>'; } else { this.innerHTML = 'less <i class=\\'bi bi-chevron-up ms-1\\'></i>'; } event.stopPropagation();">more <i class="bi bi-chevron-right ms-1"></i></a>` : '';
+                                let bBg = block.bgColor || 'transparent';
+                                let btnMore = block.has_more ? `<a href="javascript:void(0)" class="ms-3" style="color: #f15a3a; text-decoration: none; font-size: 14px; font-weight: 500; display: inline-flex; align-items: center; transition: 0.3s;" onclick="let p = document.getElementById('client-more-content-${block.id}'); p.classList.toggle('d-none'); if(p.classList.contains('d-none')){ this.innerHTML = 'more <i class=\\'bi bi-chevron-right ms-1\\'></i>'; } else { this.innerHTML = 'less <i class=\\'bi bi-chevron-up ms-1\\'></i>'; } event.stopPropagation();">more <i class="bi bi-chevron-right ms-1"></i></a>` : '';
                                 let moreTextHtml = block.has_more ? `<div id="client-more-content-${block.id}" class="more-block-text d-none mt-3 p-3 bg-light rounded border shadow-sm w-100" style="color: #475569; font-size: 15px; text-align: left; line-height: 1.6; font-weight: 500; font-family: 'Inter', sans-serif;">${block.more_content || ''}</div>` : '';
                                 
-                                dbHTML = `<div id="${block.slug || 'block-'+block.id}" class="english-programs-section mb-5" style="background-color: ${bBg};" data-aos="fade-up"><div class="section-heading mb-4 d-flex flex-column align-items-start" style="margin-bottom: 30px; text-align: left; border-bottom: 2px dashed #cbd5e1; padding-bottom: 15px;"><div class="d-flex align-items-center flex-wrap w-100"><h2 style="color: ${bColor}; font-size: 32px; margin-bottom: 0; width: auto !important;"><i class="bi ${bIcon}"></i> ${block.title || 'Khối Thông Tin 2'}</h2>${btnMore}</div>${moreTextHtml}</div><div class="swiper customEnglishSwiper-${bIndex} englishSwiper"><div class="swiper-wrapper">${innerCards}</div><div class="swiper-pagination"></div></div></div>`; 
+                                dbHTML = `<div id="${block.slug || 'block-'+block.id}" class="english-programs-section w-100 py-3 px-2" style="background-color: ${bBg}; border-radius: 20px;"><div class="section-heading mb-4 d-flex flex-column align-items-start" style="text-align: left;"><div class="d-flex align-items-center flex-wrap w-100 pb-2" style="border-bottom: 1px dotted #cbd5e1;"><h2 style="color: ${btnColor}; font-size: 26px; font-weight: 800; margin-bottom: 0; width: auto !important; text-transform: uppercase;"><i class="bi ${bIcon}"></i> ${block.title || 'Khóa Tiếng Anh'}</h2>${btnMore}</div>${moreTextHtml}</div><div class="swiper customEnglishSwiper-${bIndex} englishSwiper pt-2"><div class="swiper-wrapper">${innerCards}</div><div class="swiper-pagination"></div></div></div>`; 
                             }
+                            
+                            // Nhét vào Tab Pane
+                            tabPaneItems += `<div class="tab-pane fade ${isShow}" id="pills-${tabId}" role="tabpanel" aria-labelledby="pills-${tabId}-tab">${dbHTML}</div>`;
+                            tabIndex++;
+                        }
+                        else {
+                            // CÁC KHỐI KHÁC RENDER BÌNH THƯỜNG
+                            if (block.type === 'text' || !block.type) { 
+                                let bgStyle = block.isTransparent ? 'transparent' : (block.bgColor || '#e0f2fe'); let shadowStyle = block.hasShadow === false ? 'none' : '0 5px 15px rgba(0,0,0,0.05)'; let padStyle = (block.isTransparent && block.hasShadow === false) ? '15px 0' : '30px';
+                                dbHTML = `<div id="${block.slug || 'block-'+block.id}" class="custom-text-box" data-aos="fade-up" style="background-color: ${bgStyle}; color: ${block.textColor}; padding: ${padStyle}; border-radius: 20px; box-shadow: ${shadowStyle}; margin-bottom: 30px;">${block.content}</div>`; 
+                            } 
                             else if (block.type === 'teacher') {
                                 let tbColor = block.color || '#00d5ff'; let tbIcon = block.icon || 'bi-person-video3';
                                 let innerCards = ''; 
@@ -338,133 +357,196 @@
                                 if(block.slides) { block.slides.forEach((s) => { if(s) innerSlides += `<div class="swiper-slide"><img src="${s.img || ''}" class="news-img-card" alt="News Image"></div>`; }); }
                                 dbHTML = `<div id="${block.slug || 'block-'+block.id}" class="news-section mb-5" data-aos="fade-up" style="background-color: transparent; padding: 0;"><div class="section-heading mb-4"><h2 style="color: ${nColor}; font-weight: 800; font-size: 24px; text-transform: uppercase;">${block.title || 'LLC NEWS'}</h2><div style="width: 40px; height: 3px; background-color: ${nColor}; margin: 0 auto; border-radius: 2px;"></div></div><div class="swiper customNewsSwiper-${bIndex} newsSwiper"><div class="swiper-wrapper">${innerSlides}</div><div class="swiper-pagination"></div></div></div>`;
                             }
+                            else if (block.type === 'image-grid') {
+                                let innerCards = ''; 
+                                let bColor = block.color || '#28a745'; 
+                                let bIcon = block.icon || 'bi-images'; 
+                                let bBg = block.bgColor || 'transparent';
+                                
+                                if(block.cards) { 
+                                    block.cards.forEach((c, cIndex) => { 
+                                        let dNoneClass = cIndex >= 3 ? `d-none client-extra-img-${block.id}` : '';
+                                        innerCards += `
+                                        <div class="col-md-4 mb-4 ${dNoneClass}" data-aos="zoom-in" data-aos-delay="${(cIndex % 3) * 100}">
+                                            <div class="client-img-grid-wrapper">
+                                                <img src="${c.img || 'https://via.placeholder.com/960x600?text=960x600'}">
+                                            </div>
+                                        </div>`; 
+                                    }); 
+                                } 
+
+                                let btnXemThem = '';
+                                if(block.cards && block.cards.length > 3) {
+                                    btnXemThem = `<div class="col-12 text-center mt-2"><button class="btn fw-bold px-5 py-2 rounded-pill text-white shadow-sm" style="background-color: ${bColor}; transition: 0.3s;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'" onclick="let els = document.querySelectorAll('.client-extra-img-${block.id}'); els.forEach(e => e.classList.toggle('d-none')); this.innerText = this.innerText === 'Xem thêm' ? 'Thu gọn' : 'Xem thêm'; setTimeout(()=>AOS.refresh(), 100);">Xem thêm</button></div>`;
+                                }
+
+                                dbHTML = `<div id="${block.slug || 'block-'+block.id}" class="mb-5" data-aos="fade-up" style="background-color: ${bBg}; padding: 20px; border-radius: 20px;">
+                                    <div class="section-heading mb-4 d-flex flex-column align-items-center">
+                                        <h2 style="color: ${bColor}; font-size: 32px; margin-bottom: 0; text-transform: uppercase;"><i class="bi ${bIcon}"></i> ${block.title||'Khối Bộ Sưu Tập Ảnh'}</h2>
+                                    </div>
+                                    <div class="row">${innerCards}${btnXemThem}</div>
+                                </div>`; 
+                            }
 
                             if(block.pos === 'pos-top') renderTop += dbHTML; else if(block.pos === 'pos-mid1') renderMid1 += dbHTML; else if(block.pos === 'pos-mid2') renderMid2 += dbHTML; else renderBottom += dbHTML;
                         }
-                    });
-                }
-                document.getElementById('render_pos_top').innerHTML = renderTop; document.getElementById('render_pos_mid1').innerHTML = renderMid1; document.getElementById('render_pos_mid2').innerHTML = renderMid2; document.getElementById('render_pos_bottom').innerHTML = renderBottom;
-
-                if(data.footer_data) { 
-                    updateIMG('f_logo', data.footer_data.logo); updateHTML('f_name', data.footer_data.name); updateHTML('f_license', data.footer_data.license); updateHTML('f_address', data.footer_data.address); updateHTML('f_privacy', data.footer_data.privacy); 
-                    const mapEl = document.getElementById('f_map'); 
-                if(mapEl && data.footer_data.map_lat && data.footer_data.map_lng) { 
-                        mapEl.src = `https://maps.google.com/maps?q=${data.footer_data.map_lat},${data.footer_data.map_lng}&hl=vi&z=16&t=k&output=embed`; 
-                        mapEl.style.width = data.footer_data.map_w || '100%'; 
-                        mapEl.style.height = data.footer_data.map_h || '150px'; 
                     }
+                });
+
+                // NẾU CÓ BLOCK KHÓA HỌC THÌ ĐƯA BỘ TABS NÀY VÀO TRANG (Mình đặt ở giữa renderMid1)
+                if (hasTabbedBlocks) {
+                    let unifiedTabsHTML = `
+                        <div class="custom-unified-tabs-container mb-5 w-100" data-aos="fade-up">
+                            <ul class="nav nav-pills justify-content-center mb-5 flex-wrap" id="custom-unified-tabs" role="tablist">
+                                ${tabNavItems}
+                            </ul>
+                            <div class="tab-content w-100" id="custom-unified-tabsContent">
+                                ${tabPaneItems}
+                            </div>
+                        </div>
+                    `;
+                    renderMid1 = unifiedTabsHTML + renderMid1;
                 }
                 
-                if (data.footer_social && document.getElementById('footer_social_render')) {
-                    let s = data.footer_social;
-                    let sHtml = '';
-                    if(s.fb && s.fb.visible) sHtml += `<a href="${s.fb.url}" target="_blank" class="social-icon-btn fb"><i class="bi bi-facebook"></i></a>`;
-                    if(s.yt && s.yt.visible) sHtml += `<a href="${s.yt.url}" target="_blank" class="social-icon-btn"><i class="bi bi-youtube"></i></a>`;
-                    if(s.zl && s.zl.visible) sHtml += `<a href="${s.zl.url}" target="_blank" class="social-icon-btn"><span class="zalo-text">Zalo</span></a>`;
-                    if(s.tt && s.tt.visible) sHtml += `<a href="${s.tt.url}" target="_blank" class="social-icon-btn"><i class="bi bi-tiktok"></i></a>`;
-                    if(s.ig && s.ig.visible) sHtml += `<a href="${s.ig.url}" target="_blank" class="social-icon-btn"><i class="bi bi-instagram"></i></a>`;
-                    
-                    if (sHtml !== '') {
-                        document.getElementById('footer_social_render').innerHTML = `
-                            <div class="footer-social-card" data-aos="fade-up">
-                                <div class="footer-social-text">${s.text || 'Follow LLC - Trung Tâm Ngoại Ngữ Lê Lợi, tại:'}</div>
-                                <div class="social-icons-wrapper">
-                                    ${sHtml}
-                                </div>
-                            </div>
-                        `;
-                    } else {
-                        document.getElementById('footer_social_render').innerHTML = '';
-                    }
-                }
-
-                // 2. KHỞI TẠO LẠI CÁC SWIPER VỚI CẤU HÌNH CHUẨN 
-                setTimeout(() => { 
-                    const teacherConfig = {
-                        slidesPerView: 1, spaceBetween: 20, centeredSlides: true, loop: false, rewind: true,
-                        speed: 1000, // [NÂNG CẤP MƯỢT] Tăng speed lên 1000 để slide trượt sang có cảm giác "lướt"
-                        slideToClickedSlide: true, observer: true, observeParents: true, 
-                        autoplay: { delay: 1200, disableOnInteraction: false }, 
-                        pagination: { el: '.swiper-pagination', clickable: true }, 
-                        breakpoints: { 768: { slidesPerView: 3, spaceBetween: 30 } }
-                    };
-
-                    const standardConfig = {
-                        slidesPerView: 1, spaceBetween: 20, loop: true, loopedSlides: 6,
-                        speed: 1000, // [NÂNG CẤP MƯỢT] Tăng speed
-                        slideToClickedSlide: true, observer: true, observeParents: true,
-                        autoplay: { delay: 3500, disableOnInteraction: false }, 
-                        pagination: { el: '.swiper-pagination', clickable: true }, 
-                        breakpoints: { 768: { slidesPerView: 2, spaceBetween: 20 }, 1024: { slidesPerView: 3, spaceBetween: 30 } }
-                    };
-
-                    // ĐÃ ĐỔI PAGINATION THÀNH NAVIGATION Ở SWIPER NÀY
-                    window.cmsSwipers.push(new Swiper('.heroSwiper', { 
-                        slidesPerView: 1, loop: true, slideToClickedSlide: true, speed: 1000,
-                        autoplay: { delay: 4000, disableOnInteraction: false }, 
-                        navigation: { nextEl: '.heroSwiper .swiper-button-next', prevEl: '.heroSwiper .swiper-button-prev' } 
-                    }));
-                    
-                    window.cmsSwipers.push(new Swiper('.newsSwiper', { 
-                        effect: 'coverflow', grabCursor: true, centeredSlides: true, slidesPerView: 'auto', 
-                        loop: true, loopedSlides: 6, slideToClickedSlide: true, speed: 1000,
-                        autoplay: { delay: 3000, disableOnInteraction: false }, 
-                        coverflowEffect: { rotate: 20, stretch: 0, depth: 100, modifier: 1.5, slideShadows: false }, 
-                        pagination: { el: '.swiper-pagination', clickable: true } 
-                    }));
-                    
-                    window.cmsSwipers.push(new Swiper('.activitySwiper', { 
-                        slidesPerView: 1, spaceBetween: 20, loop: true, slideToClickedSlide: true, speed: 1000,
-                        autoplay: { delay: 2000, disableOnInteraction: false }, 
-                        pagination: { el: '.swiper-pagination', clickable: true }, 
-                        navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' } 
-                    }));
-                    
-                    window.cmsSwipers.push(new Swiper('.globalTeacherSwiper', teacherConfig));
-                    window.cmsSwipers.push(new Swiper('.globalTechSwiper', standardConfig));
-                    window.cmsSwipers.push(new Swiper('.globalEnglishSwiper', standardConfig));
-                    
-                    if (data.custom_blocks) {
-                        data.custom_blocks.forEach((block, bIndex) => {
-                            if(block && block.type === 'teacher') {
-                                window.cmsSwipers.push(new Swiper(`.customTeacherSwiper-${bIndex}`, teacherConfig));
-                            } else if (block && block.type === 'tech') {
-                                window.cmsSwipers.push(new Swiper(`.customTechSwiper-${bIndex}`, standardConfig));
-                            } else if (block && block.type === 'english') {
-                                window.cmsSwipers.push(new Swiper(`.customEnglishSwiper-${bIndex}`, standardConfig));
-                            } else if (block && block.type === 'news') {
-                                window.cmsSwipers.push(new Swiper(`.customNewsSwiper-${bIndex}`, { 
-                                    effect: 'coverflow', grabCursor: true, centeredSlides: true, slidesPerView: 'auto', 
-                                    loop: true, loopedSlides: 6, slideToClickedSlide: true, speed: 1000,
-                                    autoplay: { delay: 3000, disableOnInteraction: false }, 
-                                    coverflowEffect: { rotate: 20, stretch: 0, depth: 100, modifier: 1.5, slideShadows: false }, 
-                                    pagination: { el: '.swiper-pagination', clickable: true } 
-                                }));
-                            }
+                // QUAN TRỌNG: Script đổi màu TABS chuẩn như ảnh (khi click viền biến thành màu nền kín)
+                setTimeout(() => {
+                    const tabs = document.querySelectorAll('.custom-tab-btn');
+                    tabs.forEach(tab => {
+                        tab.addEventListener('show.bs.tab', function (e) {
+                            // Trả toàn bộ tab về trạng thái chưa chọn (Viền đen, nền trong)
+                            tabs.forEach(t => {
+                                t.style.backgroundColor = 'transparent';
+                                t.style.color = '#112255';
+                                t.style.border = '1px solid #112255';
+                            });
+                            // Tô màu nền cho Tab đang được chọn
+                            let activeBg = this.getAttribute('data-active-bg');
+                            this.style.backgroundColor = activeBg;
+                            this.style.color = '#fff';
+                            this.style.border = `1px solid ${activeBg}`;
                         });
-                    }
-                    
-                    // [NÂNG CẤP MƯỢT] Refresh AOS sau khi Swiper đã bám dính DOM hoàn toàn
-                    requestAnimationFrame(() => AOS.refresh()); 
-                }, 300); 
-            } catch (error) { console.error("Đã xảy ra lỗi:", error); }
-        }
-    });
+                    });
+                }, 500);
+            }
+            document.getElementById('render_pos_top').innerHTML = renderTop; document.getElementById('render_pos_mid1').innerHTML = renderMid1; document.getElementById('render_pos_mid2').innerHTML = renderMid2; document.getElementById('render_pos_bottom').innerHTML = renderBottom;
 
-    const submitRegistration = async (formData) => {
-        document.getElementById('loading').style.display = 'flex';
-        try { 
-            await push(ref(db, "registrations"), { ...formData, timestamp: serverTimestamp() }); 
-            document.getElementById('loading').style.display = 'none'; 
-            const modalEl = document.getElementById('registrationModal'); 
-            const modal = bootstrap.Modal.getInstance(modalEl); 
-            if (modal) modal.hide(); 
-            Swal.fire({ title: '✨ Thành công!', html: `Cảm ơn phụ huynh <b>${formData.parentName}</b> với SĐT <b>${formData.phone}</b>, trung tâm sẽ liên hệ vào giây lát.`, icon: 'success' }); 
-        } catch (error) { 
-            document.getElementById('loading').style.display = 'none'; 
-            Swal.fire('Lỗi!', 'Không thể gửi dữ liệu, vui lòng thử lại.', 'error'); 
-        }
-    };
+            if(data.footer_data) { 
+                updateIMG('f_logo', data.footer_data.logo); updateHTML('f_name', data.footer_data.name); updateHTML('f_license', data.footer_data.license); updateHTML('f_address', data.footer_data.address); updateHTML('f_privacy', data.footer_data.privacy); 
+                const mapEl = document.getElementById('f_map'); 
+               if(mapEl && data.footer_data.map_lat && data.footer_data.map_lng) { 
+                    mapEl.src = `https://maps.google.com/maps?q=${data.footer_data.map_lat},${data.footer_data.map_lng}&hl=vi&z=16&t=k&output=embed`; 
+                    mapEl.style.width = data.footer_data.map_w || '100%'; 
+                    mapEl.style.height = data.footer_data.map_h || '150px'; 
+                }
+            }
+            
+            if (data.footer_social && document.getElementById('footer_social_render')) {
+                let s = data.footer_social;
+                let sHtml = '';
+                if(s.fb && s.fb.visible) sHtml += `<a href="${s.fb.url}" target="_blank" class="social-icon-btn fb"><i class="bi bi-facebook"></i></a>`;
+                if(s.yt && s.yt.visible) sHtml += `<a href="${s.yt.url}" target="_blank" class="social-icon-btn"><i class="bi bi-youtube"></i></a>`;
+                if(s.zl && s.zl.visible) sHtml += `<a href="${s.zl.url}" target="_blank" class="social-icon-btn"><span class="zalo-text">Zalo</span></a>`;
+                if(s.tt && s.tt.visible) sHtml += `<a href="${s.tt.url}" target="_blank" class="social-icon-btn"><i class="bi bi-tiktok"></i></a>`;
+                if(s.ig && s.ig.visible) sHtml += `<a href="${s.ig.url}" target="_blank" class="social-icon-btn"><i class="bi bi-instagram"></i></a>`;
+                
+                if (sHtml !== '') {
+                    document.getElementById('footer_social_render').innerHTML = `
+                        <div class="footer-social-card" data-aos="fade-up">
+                            <div class="footer-social-text">${s.text || 'Follow LLC - Trung Tâm Ngoại Ngữ Lê Lợi, tại:'}</div>
+                            <div class="social-icons-wrapper">
+                                ${sHtml}
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    document.getElementById('footer_social_render').innerHTML = '';
+                }
+            }
 
-    document.getElementById('form_popup').addEventListener('submit', function(e) { e.preventDefault(); const data = { parentName: document.getElementById('p_name').value, phone: document.getElementById('p_phone').value, email: document.getElementById('p_email').value, city: document.getElementById('p_city').value, ageGroup: document.getElementById('p_age').value, course: document.getElementById('p_course').value, studyMode: document.getElementById('p_study').value, note: "Nguồn: Form Đăng Ký Qua Popup" }; submitRegistration(data); this.reset(); });
-    document.getElementById('form_footer').addEventListener('submit', function(e) { e.preventDefault(); const data = { parentName: document.getElementById('f_name').value, phone: document.getElementById('f_phone').value, email: document.getElementById('f_email').value, city: document.getElementById('f_city').value, studyMode: document.getElementById('f_study').value, course: document.getElementById('f_course').value, ageGroup: document.getElementById('f_age').value, note: "Nguồn: Form Đăng Ký Cuối Trang" }; submitRegistration(data); this.reset(); });
+            setTimeout(() => { 
+                const teacherConfig = {
+                    slidesPerView: 1, spaceBetween: 20, centeredSlides: true, loop: false, rewind: true,
+                    speed: 1000, 
+                    slideToClickedSlide: true, observer: true, observeParents: true, 
+                    autoplay: { delay: 1200, disableOnInteraction: false }, 
+                    pagination: { el: '.swiper-pagination', clickable: true }, 
+                    breakpoints: { 768: { slidesPerView: 3, spaceBetween: 30 } }
+                };
+
+                const standardConfig = {
+                    slidesPerView: 1, spaceBetween: 20, loop: true, loopedSlides: 6,
+                    speed: 1000,
+                    slideToClickedSlide: true, observer: true, observeParents: true,
+                    autoplay: { delay: 3500, disableOnInteraction: false }, 
+                    pagination: { el: '.swiper-pagination', clickable: true }, 
+                    breakpoints: { 768: { slidesPerView: 2, spaceBetween: 20 }, 1024: { slidesPerView: 3, spaceBetween: 30 } }
+                };
+
+                window.cmsSwipers.push(new Swiper('.heroSwiper', { 
+                    slidesPerView: 1, loop: true, slideToClickedSlide: true, speed: 1000,
+                    autoplay: { delay: 4000, disableOnInteraction: false }, 
+                    navigation: { nextEl: '.heroSwiper .swiper-button-next', prevEl: '.heroSwiper .swiper-button-prev' } 
+                }));
+                
+                window.cmsSwipers.push(new Swiper('.newsSwiper', { 
+                    effect: 'coverflow', grabCursor: true, centeredSlides: true, slidesPerView: 'auto', 
+                    loop: true, loopedSlides: 6, slideToClickedSlide: true, speed: 1000,
+                    autoplay: { delay: 3000, disableOnInteraction: false }, 
+                    coverflowEffect: { rotate: 20, stretch: 0, depth: 100, modifier: 1.5, slideShadows: false }, 
+                    pagination: { el: '.swiper-pagination', clickable: true } 
+                }));
+                
+                window.cmsSwipers.push(new Swiper('.activitySwiper', { 
+                    slidesPerView: 1, spaceBetween: 20, loop: true, slideToClickedSlide: true, speed: 1000,
+                    autoplay: { delay: 2000, disableOnInteraction: false }, 
+                    pagination: { el: '.swiper-pagination', clickable: true }, 
+                    navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' } 
+                }));
+                
+                window.cmsSwipers.push(new Swiper('.globalTeacherSwiper', teacherConfig));
+                window.cmsSwipers.push(new Swiper('.globalTechSwiper', standardConfig));
+                window.cmsSwipers.push(new Swiper('.globalEnglishSwiper', standardConfig));
+                
+                if (data.custom_blocks) {
+                    data.custom_blocks.forEach((block, bIndex) => {
+                        if(block && block.type === 'teacher') {
+                            window.cmsSwipers.push(new Swiper(`.customTeacherSwiper-${bIndex}`, teacherConfig));
+                        } else if (block && block.type === 'tech') {
+                            window.cmsSwipers.push(new Swiper(`.customTechSwiper-${bIndex}`, standardConfig));
+                        } else if (block && block.type === 'english') {
+                            window.cmsSwipers.push(new Swiper(`.customEnglishSwiper-${bIndex}`, standardConfig));
+                        } else if (block && block.type === 'news') {
+                            window.cmsSwipers.push(new Swiper(`.customNewsSwiper-${bIndex}`, { 
+                                effect: 'coverflow', grabCursor: true, centeredSlides: true, slidesPerView: 'auto', 
+                                loop: true, loopedSlides: 6, slideToClickedSlide: true, speed: 1000,
+                                autoplay: { delay: 3000, disableOnInteraction: false }, 
+                                coverflowEffect: { rotate: 20, stretch: 0, depth: 100, modifier: 1.5, slideShadows: false }, 
+                                pagination: { el: '.swiper-pagination', clickable: true } 
+                            }));
+                        }
+                    });
+                }
+                
+                requestAnimationFrame(() => AOS.refresh()); 
+            }, 300); 
+        } catch (error) { console.error("Đã xảy ra lỗi:", error); }
+    }
+});
+
+const submitRegistration = async (formData) => {
+    document.getElementById('loading').style.display = 'flex';
+    try { 
+        await push(ref(db, "registrations"), { ...formData, timestamp: serverTimestamp() }); 
+        document.getElementById('loading').style.display = 'none'; 
+        const modalEl = document.getElementById('registrationModal'); 
+        const modal = bootstrap.Modal.getInstance(modalEl); 
+        if (modal) modal.hide(); 
+        Swal.fire({ title: '✨ Thành công!', html: `Cảm ơn phụ huynh <b>${formData.parentName}</b> với SĐT <b>${formData.phone}</b>, trung tâm sẽ liên hệ vào giây lát.`, icon: 'success' }); 
+    } catch (error) { 
+        document.getElementById('loading').style.display = 'none'; 
+        Swal.fire('Lỗi!', 'Không thể gửi dữ liệu, vui lòng thử lại.', 'error'); 
+    }
+};
+
+document.getElementById('form_popup').addEventListener('submit', function(e) { e.preventDefault(); const data = { parentName: document.getElementById('p_name').value, phone: document.getElementById('p_phone').value, email: document.getElementById('p_email').value, city: document.getElementById('p_city').value, ageGroup: document.getElementById('p_age').value, course: document.getElementById('p_course').value, studyMode: document.getElementById('p_study').value, note: "Nguồn: Form Đăng Ký Qua Popup" }; submitRegistration(data); this.reset(); });
+document.getElementById('form_footer').addEventListener('submit', function(e) { e.preventDefault(); const data = { parentName: document.getElementById('f_name').value, phone: document.getElementById('f_phone').value, email: document.getElementById('f_email').value, city: document.getElementById('f_city').value, studyMode: document.getElementById('f_study').value, course: document.getElementById('f_course').value, ageGroup: document.getElementById('f_age').value, note: "Nguồn: Form Đăng Ký Cuối Trang" }; submitRegistration(data); this.reset(); });
