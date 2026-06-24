@@ -51,8 +51,8 @@ body { font-family: 'Quicksand', sans-serif; margin: 0; padding: 0; background-c
 .mobile-menu-link:hover { background: #e2e8f0; color: var(--primary-color); }
 .mobile-menu-link.phone-link { background: #fff5f5; color: #e31837; border: 1px solid #fecaca; }
 
-/* --- HERO SECTION ĐÃ ĐƯỢC CHUYỂN THÀNH SWIPER TRƯỢT --- */
-.hero-section { position: relative; width: 100%; aspect-ratio: 1920 / 800; margin-top: 80px; display: block; overflow: hidden; }
+/* --- HERO SECTION: ĐÃ SỬA THÀNH TỶ LỆ 1920/1080 --- */
+.hero-section { position: relative; width: 100%; aspect-ratio: 1920 / 1080; margin-top: 80px; display: block; overflow: hidden; }
 .heroSwiper { width: 100%; height: 100%; }
 
 /* --- NÚT ĐIỀU HƯỚNG TRÁI/PHẢI CHO ẢNH BÌA HERO SECTION (THAY CHO CHẤM TRÒN) --- */
@@ -100,7 +100,7 @@ body { font-family: 'Quicksand', sans-serif; margin: 0; padding: 0; background-c
 .form-check-label { color: rgba(255,255,255,0.9); font-size: 14px; }
 
 .content-section { padding: 5px 10px 20px 10px; background: rgb(255, 255, 255); } 
-/* hoặc dùng background: #ffffff; */.content-container { max-width: 1500px; margin: 0 auto; overflow: hidden; }
+.content-container { max-width: 1500px; margin: 0 auto; overflow: hidden; }
 .section-heading { text-align: center; margin-bottom: 60px; }
 .section-heading h2 { color: var(--dark-blue); font-weight: 800; font-size: 38px; margin-bottom: 15px; }
 .section-heading p { font-size: 18px; color: #64748b; max-width: 800px; margin: 0 auto; line-height: 1.6; }
@@ -109,7 +109,7 @@ body { font-family: 'Quicksand', sans-serif; margin: 0; padding: 0; background-c
 .swiper-pagination { z-index: 50 !important; }
 .swiper-pagination-bullet { cursor: pointer !important; pointer-events: auto !important; }
 
-/* CSS LLC NEWS COVERFLOW - ĐÃ SỬA CHẤM TRÒN HOÀN TOÀN */
+/* CSS LLC NEWS COVERFLOW */
 .news-section { background-color: rgb(255, 255, 255); padding: 30px 0; }
 .newsSwiper { width: 100%; padding-top: 10px; padding-bottom: 30px; }
 .newsSwiper .swiper-slide { background-position: center; background-size: cover; width: 400px; height: auto; display: flex; flex-direction: column; align-items: center; filter: brightness(0.6); transition: 0.4s; }
@@ -190,7 +190,7 @@ div#loading { position: fixed; top: 0; left: 0; width: 100%; height: 100vh; disp
 .activitySwiper .swiper-button-next, .activitySwiper .swiper-button-prev { color: var(--primary-color); }
 .activitySwiper .swiper-pagination-bullet-active { background: var(--primary-color); }
 
-/* --- KHỐI GIÁO VIÊN HOÀN CHỈNH DẠNG HÌNH BO GÓC MỚI --- */
+/* --- KHỐI GIÁO VIÊN --- */
 .teacherSwiper { 
     width: 100%; 
     max-width: 1250px !important; 
@@ -332,7 +332,8 @@ div#loading { position: fixed; top: 0; left: 0; width: 100%; height: 100vh; disp
     .header-nav { display: none; }
     .custom-text-box h1, .custom-text-box h2, .custom-text-box h3, .section-heading h2 { font-size: 32px !important; line-height: 1.3 !important; }
     
-    .hero-section { flex-direction: column; justify-content: flex-start; min-height: auto; aspect-ratio: 1920 / 800; margin-top: 70px; }
+    /* ĐÃ SỬA: Tỷ lệ 1920/1080 trên Mobile */
+    .hero-section { flex-direction: column; justify-content: flex-start; min-height: auto; aspect-ratio: 1920 / 1080; margin-top: 70px; }
     
     #p_about_title { font-size: 28px !important; }
     .newsSwiper .swiper-slide { width: 250px; }
@@ -411,7 +412,6 @@ div#loading { position: fixed; top: 0; left: 0; width: 100%; height: 100vh; disp
 .ep-header { justify-content: center !important; }
 
 /* --- CĂN GIỮA TOÀN BỘ TIÊU ĐỀ CÁC KHỐI --- */
-/* --- CĂN GIỮA TOÀN BỘ TIÊU ĐỀ CÁC KHỐI --- */
 .section-heading, .section-heading[style] { text-align: center !important; }
 .section-heading h2, .section-heading h2[style] { 
     display: flex !important; 
@@ -419,7 +419,7 @@ div#loading { position: fixed; top: 0; left: 0; width: 100%; height: 100vh; disp
     align-items: center !important; 
     text-align: center !important; 
     width: 100% !important; 
-    text-transform: uppercase !important; /* Lệnh ép in hoa toàn bộ chữ */
+    text-transform: uppercase !important;
 }
 .section-heading h2 i { margin-right: 12px !important; }
 
@@ -431,7 +431,7 @@ div#loading { position: fixed; top: 0; left: 0; width: 100%; height: 100vh; disp
     justify-content: flex-start !important; 
     text-align: left !important; 
     width: auto !important;
-    text-transform: uppercase !important; /* Lệnh ép in hoa toàn bộ chữ cho khối căn trái */
+    text-transform: uppercase !important;
 }
 
 /* --- KHẮC PHỤC LỖI MENU CHE TIÊU ĐỀ KHI DÙNG ĐIỂM NEO --- */
@@ -456,14 +456,4 @@ div#loading { position: fixed; top: 0; left: 0; width: 100%; height: 100vh; disp
     .social-icon-btn { width: 40px; height: 40px; font-size: 18px; border-width: 2px; }
     .social-icon-btn .zalo-text { font-size: 11px; }
     .social-icons-wrapper { gap: 10px; }
-}
-
-/* --- CHO PHÉP CĂN TRÁI NHỮNG KHỐI ĐƯỢC CHỈ ĐỊNH, CÁC KHỐI KHÁC VẪN GIỮA --- */
-.section-heading[style*="text-align: left"] { 
-    text-align: left !important; 
-}
-.section-heading[style*="text-align: left"] h2 { 
-    justify-content: flex-start !important; 
-    text-align: left !important; 
-    width: auto !important; /* KHẮC PHỤC LỖI FULL 100% ĐỂ NÚT MORE LÊN CÙNG HÀNG */
 }
