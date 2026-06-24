@@ -36,6 +36,19 @@
             font-family: 'Montserrat', sans-serif !important;
         }
 
+        /* --- NGĂN CHẶN HIỆN CON TRỎ SOẠN THẢO VÀ LỖI BÔI ĐEN KHI CLICK --- */
+        .section-heading h2, .custom-tab-btn, .section-heading a {
+            user-select: none !important;
+            -webkit-user-select: none !important;
+            -moz-user-select: none !important;
+            -ms-user-select: none !important;
+            outline: none !important;
+        }
+        .section-heading h2 {
+            cursor: default; /* Chuột giữ nguyên hình mũi tên khi lướt qua tiêu đề */
+        }
+        /* ---------------------------------------------------------------- */
+
         /* --- BẮT ĐẦU: FIX LỖI LỆCH NÚT CHẤM TRÒN SWIPER --- */
         .swiper-pagination {
             position: absolute !important;
@@ -47,7 +60,7 @@
             padding: 0 !important;
         }
         .swiper-pagination-bullet {
-            margin: 0 5px !important; /* Tạo khoảng cách đều 2 bên cho các nút */
+            margin: 0 5px !important;
         }
         /* --- KẾT THÚC FIX --- */
 
@@ -65,6 +78,44 @@
                 padding: 20px !important;
             }
         }
+        
+        /* --- CSS CHO KHỐI LƯỚI ẢNH (IMAGE GRID) TRANG CHỦ --- */
+        .client-img-grid-wrapper {
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            position: relative;
+            background: #fff;
+        }
+        .client-img-grid-wrapper img {
+            width: 100%;
+            aspect-ratio: 523/650;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.5s ease;
+        }
+        .client-img-grid-wrapper:hover img {
+            transform: scale(1.05);
+        }
+
+        /* --- BẮT ĐẦU CSS CHO TABS GỘP KHÓA HỌC (CHUẨN ẢNH) --- */
+        .custom-unified-tabs-container .nav-pills {
+            gap: 15px;
+            border-bottom: none;
+            justify-content: center;
+        }
+        .custom-unified-tabs-container .tab-pane {
+            animation: fadeTab 0.4s ease-out forwards;
+        }
+        .custom-tab-btn:hover {
+            opacity: 0.85;
+            transform: translateY(-2px);
+        }
+        @keyframes fadeTab {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        /* --- KẾT THÚC CSS CHO TABS --- */
     </style>
 </head>
 <body>
@@ -139,8 +190,6 @@
                 </div>
             </div>
 
-           
-
             <div id="render_pos_top" class="mb-5"></div>
 
             <div class="section-heading mt-5" id="wrap_intro" data-aos="fade-up">
@@ -148,7 +197,8 @@
                 <p id="cms_sec1_desc">Đang tải nội dung từ máy chủ...</p>
             </div>
 
-            <div id="render_pos_mid1" class="mb-5"></div>
+            <!-- VỊ TRÍ GỘP TAB SẼ ĐƯỢC RENDER VÀO ĐẦU KHỐI render_pos_mid1 -->
+            <div id="render_pos_mid1" class="mb-5 w-100"></div>
 
             <div id="wrap_global_tech" class="mb-5" data-aos="fade-up">
                 <div class="section-heading mb-4" style="text-align: left;">
